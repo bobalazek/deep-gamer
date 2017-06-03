@@ -11,20 +11,20 @@ screenshots_dir = os.path.abspath(
     os.path.join(
         os.path.dirname(os.path.realpath(__file__)),
         '..',
-        os.path.join('data', 'screenshots')
+        'data'
     )
 )
 activity = 'driving'
 
 # Functions
 def capture_screenshot(timestamp):
-    final_dir = os.path.join(screenshots_dir, activity, session_id)
+    save_dir = os.path.join(screenshots_dir, activity, 'raw', session_id)
     
-    if not os.path.exists(final_dir):
-        os.makedirs(final_dir)
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
     
     filename = timestamp.replace(':', '') + '.png'
-    filepath = os.path.join(final_dir, filename)
+    filepath = os.path.join(save_dir, filename)
 
     im = ImageGrab.grab()
     im.save(filepath)
