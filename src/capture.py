@@ -18,7 +18,7 @@ if not os.path.exists(session_dir):
     os.makedirs(session_dir)
 
 # Functions
-def capture_screenshot(timestamp):
+def capture_image(timestamp):
     filename = timestamp.replace(':', '') + '.png'
     filepath = os.path.join(session_dir, filename)
 
@@ -62,12 +62,12 @@ def do_capturing():
         is_capturing = not is_capturing
 
     if is_capturing:
-        screenshot_filename, screenshot_filepath = capture_screenshot(timestamp)
+        image_name, image_path = capture_image(timestamp)
         data = {
             'timestamp': timestamp,
-            'screenshot': {
-                'filename': screenshot_filename,
-                'filepath': screenshot_filepath,
+            'image': {
+                'name': image_name,
+                'path': image_path,
             },
             'inputs': inputs,
         }
