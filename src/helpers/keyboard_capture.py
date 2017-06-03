@@ -163,15 +163,15 @@ def check_for_capturing_hotkeys(keyboard, toggle_capturing_hotkeys):
     global last_pressed_hotkeys
     now = time.time()
     toggle_hotkeys_pressed = 0
-    
+
     for hotkey in toggle_capturing_hotkeys:
         if keyboard[hotkey]:
             toggle_hotkeys_pressed += 1
-    
+
     diff = now - last_pressed_hotkeys
     if toggle_hotkeys_pressed == len(toggle_capturing_hotkeys) and diff > 1:
         last_pressed_hotkeys = time.time()
-        
+
         return True
-    
+
     return False

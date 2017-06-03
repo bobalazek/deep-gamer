@@ -45,7 +45,6 @@ def get_mouse_inputs():
 def get_keyboard_inputs():
     return get_pressed_keyboard_keys()
 
-
 def get_gamepad_inputs():
     return get_pressed_gamepad_buttons_and_axes()
 
@@ -76,13 +75,13 @@ def do_capturing():
 # Main
 if __name__ == "__main__":
     last_time = time.time()
-    
+
     print('Start at {0}'.format(now))
-    
+
     while True:
         inputs = capture_inputs()
 
         if do_capturing():
             print('Last execution took {0} seconds.'.format(time.time() - last_time))
-        
+
         last_time = time.time()

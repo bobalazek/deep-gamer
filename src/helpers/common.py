@@ -21,7 +21,7 @@ def get_data_dir():
         )
     )
 
-def process_image_from_array(image_array, processing_type):
+def process_image_from_array(image_array, processing_type='default'):
     processed_image_array = image_array
 
     # TODO: implement processing type
@@ -31,9 +31,12 @@ def process_image_from_array(image_array, processing_type):
 
     return processed_image_array
 
-def process_image(image_path, processing_type):
+def process_image(image, processing_type='default'):
+    if type(image) == str:
+        image = Image.open(image)
+    
     processed_image_array = process_image_from_array(
-        np.array(Image.open(image_path)),
+        np.array(image),
         processing_type
     )
 

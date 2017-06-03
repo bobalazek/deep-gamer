@@ -39,14 +39,14 @@ def get_activity_raw_session_dirs():
         sys.exit('Exiting. Did not found any sessions for this activity')
 
     activity_raw_session_dirs.pop(0) # Remove first object, as it's the directory itself
-    
+
     return activity_raw_session_dirs
 
 def get_session_directory_images(session_directory_log_file_path):
     session_directory_log_file = open(session_directory_log_file_path, 'r+').read()
     session_directory_images = session_directory_log_file.split("\n")
     session_directory_images = [x for x in session_directory_images if x != ''] # TODO: find a quicker solution? filter()?
-    
+
     return session_directory_images
 
 def do_image_processing(image_data):
@@ -103,7 +103,7 @@ if __name__ == "__main__":
     print('=' * 32)
     print('Processing type: {0}'.format(processing_type))
     print('=' * 32)
-    
+
     # Prepare files
     prepare_files()
 
