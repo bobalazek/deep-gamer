@@ -11,21 +11,21 @@ gamepad = {
         'mode': False,
         'left_bumper': False,
         'right_bumper': False,
-        'left_trigger': 0,
-        'right_trigger': 0,
     },
     'axes': {
+        'left_trigger': 0, # 0 <> 1
+        'right_trigger': 0, # 0 <> 1
         'left': {
-            'x': 0,
-            'y': 0,
+            'x': 0, # -1 <> 1
+            'y': 0, # -1 <> 1
         },
         'right': {
-            'x': 0,
-            'y': 0,
+            'x': 0, # -1 <> 1
+            'y': 0, # -1 <> 1
         },
         'd_pad': {
-            'x': 0,
-            'y': 0,
+            'x': 0, # -1 <> 1
+            'y': 0, # -1 <> 1
         },
     },
 }
@@ -39,9 +39,7 @@ def get_pressed_gamepad_buttons_and_axes():
 
             if code == 'SYN_REPORT':
                 continue
-            
-            print(code, state)
-            
+
             if code == 'BTN_NORTH':
                 gamepad['buttons']['north'] = state == 1
             elif code == 'BTN_SOUTH':
@@ -59,9 +57,9 @@ def get_pressed_gamepad_buttons_and_axes():
             elif code == 'BTN_TR':
                 gamepad['buttons']['right_bumper'] = state == 1
             elif code == 'ABS_Z':
-                gamepad['buttons']['left_trigger'] = state != 0 and (state / 255) or 0
+                gamepad['axes']['left_trigger'] = state != 0 and (state / 255) or 0
             elif code == 'ABS_RZ':
-                gamepad['buttons']['right_trigger'] = state != 0 and (state / 255) or 0
+                gamepad['axes']['right_trigger'] = state != 0 and (state / 255) or 0
             elif code == 'ABS_X':
                 gamepad['axes']['left']['x'] = state != 0 and (state / 32768) or 0
             elif code == 'ABS_Y':
