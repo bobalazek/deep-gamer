@@ -1,4 +1,4 @@
-import sys, os, time, datetime
+import sys, os, time, datetime, json
 import win32api
 from PIL import ImageGrab
 from helpers.keyboard_capture import get_pressed_keyboard_keys, check_for_capturing_hotkeys
@@ -61,7 +61,6 @@ def get_gamepad_inputs():
 def do_capturing():
     global inputs, is_capturing
 
-    time.sleep(0.25)
     now = datetime.datetime.now()
     timestamp = now.isoformat()
 
@@ -75,7 +74,8 @@ def do_capturing():
             'screenshot': screenshot,
             'inputs': inputs,
         }
-        # TODO: save to log file
+        with open(os.path.join(save_dir, 'log.txt'), "a") as log_file:
+            log_file.write(json.dumps(data) + "\n")
 
     return is_capturing
 
