@@ -1,7 +1,15 @@
 import os
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageGrab
 import cv2
+
+def grab_image(save_path=False):
+    # TODO: fix -- not working in the MINGW64 terminal
+    image = ImageGrab.grab()
+    if save_path != False:
+        image.save(save_path)
+    
+    return image
 
 def get_data_dir():
     return os.path.abspath(

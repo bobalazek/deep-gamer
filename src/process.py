@@ -1,6 +1,4 @@
 import sys, os, json, glob, time, datetime
-from PIL import Image
-import cv2
 from helpers.common import *
 
 # Preparation

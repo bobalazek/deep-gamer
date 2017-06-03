@@ -1,6 +1,5 @@
 import sys, os, time, datetime, json
 import win32api
-from PIL import ImageGrab
 from helpers.common import *
 from helpers.keyboard_capture import get_pressed_keyboard_keys, check_for_capturing_hotkeys
 from helpers.gamepad_capture import get_pressed_gamepad_buttons_and_axes
@@ -22,9 +21,7 @@ def capture_image(timestamp):
     filename = timestamp.replace(':', '') + '.png'
     filepath = os.path.join(session_dir, filename)
 
-    # TODO: fix -- not working in the MINGW64 terminal
-    im = ImageGrab.grab()
-    im.save(filepath)
+    grab_image(filepath)
     
     return filename, filepath
 
