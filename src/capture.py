@@ -1,6 +1,7 @@
 import sys, os, time, datetime, json
 import win32api
 from PIL import ImageGrab
+from helpers.common import *
 from helpers.keyboard_capture import get_pressed_keyboard_keys, check_for_capturing_hotkeys
 from helpers.gamepad_capture import get_pressed_gamepad_buttons_and_axes
 
@@ -10,29 +11,22 @@ toggle_capturing_hotkeys = ['left_control', 'F11'] # view the full codes map ins
 inputs = None # Saves the current input on every tick
 now = datetime.datetime.now()
 session_id = now.strftime('%Y-%m-%d_%H%M%S')
-screenshots_dir = os.path.abspath(
-    os.path.join(
-        os.path.dirname(os.path.realpath(__file__)),
-        '..',
-        'data'
-    )
-)
+data_dir = get_data_dir()
 activity = len(sys.argv) > 1 and sys.argv[1] or 'general'
-
-save_dir = os.path.join(screenshots_dir, activity, 'raw', session_id)
-if not os.path.exists(save_dir):
-    os.makedirs(save_dir)
+session_dir = os.path.join(data_dir, activity, 'raw', session_id)
+if not os.path.exists(session_dir):
+    os.makedirs(session_dir)
 
 # Functions
 def capture_screenshot(timestamp):
     filename = timestamp.replace(':', '') + '.png'
-    filepath = os.path.join(save_dir, filename)
+    filepath = os.path.join(session_dir, filename)
 
     # TODO: fix -- not working in the MINGW64 terminal
     im = ImageGrab.grab()
     im.save(filepath)
     
-    return filepath
+    return filename, filepath
 
 def capture_inputs():    
     return {
@@ -68,13 +62,16 @@ def do_capturing():
         is_capturing = not is_capturing
 
     if is_capturing:
-        screenshot = capture_screenshot(timestamp)
+        screenshot_filename, screenshot_filepath = capture_screenshot(timestamp)
         data = {
             'timestamp': timestamp,
-            'screenshot': screenshot,
+            'screenshot': {
+                'filename': screenshot_filename,
+                'filepath': screenshot_filepath,
+            },
             'inputs': inputs,
         }
-        with open(os.path.join(save_dir, 'log.txt'), "a") as log_file:
+        with open(os.path.join(session_dir, 'log.txt'), 'a') as log_file:
             log_file.write(json.dumps(data) + "\n")
 
     return is_capturing
