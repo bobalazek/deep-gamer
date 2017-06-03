@@ -1,3 +1,4 @@
+import time
 import win32api, win32con
 
 # https://gist.github.com/chriskiehl/2906125
@@ -149,6 +150,7 @@ VK_CODES = {
     "'": 0xDE,
     '`': 0xC0
 }
+last_pressed_hotkeys = time.time() - 1
 
 def get_pressed_keyboard_keys():
     res = {}
@@ -156,3 +158,20 @@ def get_pressed_keyboard_keys():
         code = VK_CODES[key]
         res[key] = win32api.GetAsyncKeyState(code) != 0
     return res
+
+def check_for_capturing_hotkeys(keyboard, toggle_capturing_hotkeys):
+    global last_pressed_hotkeys
+    now = time.time()
+    toggle_hotkeys_pressed = 0
+    
+    for hotkey in toggle_capturing_hotkeys:
+        if keyboard[hotkey]:
+            toggle_hotkeys_pressed += 1
+    
+    diff = now - last_pressed_hotkeys
+    if toggle_hotkeys_pressed == len(toggle_capturing_hotkeys) and diff > 1:
+        last_pressed_hotkeys = time.time()
+        
+        return True
+    
+    return False
