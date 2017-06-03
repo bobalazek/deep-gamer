@@ -27,7 +27,7 @@ def process_image_from_array(image_array, processing_type='default'):
     # TODO: implement processing type
 
     processed_image_array = cv2.cvtColor(processed_image_array, cv2.COLOR_BGR2GRAY)
-    processed_image_array = cv2.Canny(processed_image_array, threshold1=200, threshold2=300)
+    processed_image_array = cv2.Canny(processed_image_array, threshold1=50, threshold2=250)
 
     return processed_image_array
 

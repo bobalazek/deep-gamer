@@ -95,6 +95,9 @@ def do_session_directory_processing(session_directory, session_directory_images)
 # Main
 if __name__ == "__main__":
     last_time = time.time()
+    
+    # Prepare files
+    prepare_files()
 
     # General information
     print('Start at {0}'.format(now))
@@ -103,9 +106,6 @@ if __name__ == "__main__":
     print('=' * 32)
     print('Processing type: {0}'.format(processing_type))
     print('=' * 32)
-
-    # Prepare files
-    prepare_files()
 
     # Already processed images
     processed_images = get_processed_images()
