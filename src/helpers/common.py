@@ -1,7 +1,7 @@
 import os
+import cv2
 import numpy as np
 from PIL import Image, ImageGrab
-import cv2
 
 def grab_image(save_path=False):
     # TODO: fix -- not working in the MINGW64 terminal
@@ -32,7 +32,7 @@ def process_image_from_array(image_array, mode='default'):
     return processed_image_array
 
 def process_image(image, mode='default', return_array=False):
-    if type(image) == str:
+    if type(image) is str:
         image = Image.open(image)
 
     processed_image_array = process_image_from_array(
@@ -44,3 +44,17 @@ def process_image(image, mode='default', return_array=False):
         return processed_image_array
 
     return Image.fromarray(processed_image_array)
+
+def show_preview_window(image):
+    if type(image) is not np.ndarray:
+        image = np.array(image)
+
+    cv2.namedWindow('Preview', cv2.WINDOW_NORMAL)
+    cv2.imshow('Preview', image)
+
+    if cv2.waitKey(25) & 0xFF == ord('q'):
+        cv2.destroyAllWindows()
+
+        return False
+
+    return True
