@@ -31,7 +31,7 @@ def process_image_from_array(image_array, mode='default'):
 
     return processed_image_array
 
-def process_image(image, mode='default'):
+def process_image(image, mode='default', return_array=False):
     if type(image) == str:
         image = Image.open(image)
 
@@ -39,5 +39,8 @@ def process_image(image, mode='default'):
         np.array(image),
         mode
     )
+
+    if return_array:
+        return processed_image_array
 
     return Image.fromarray(processed_image_array)
