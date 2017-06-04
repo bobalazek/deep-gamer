@@ -8,7 +8,7 @@ def grab_image(save_path=False):
     image = ImageGrab.grab()
     if save_path != False:
         image.save(save_path)
-    
+
     return image
 
 def get_data_dir():
@@ -21,23 +21,23 @@ def get_data_dir():
         )
     )
 
-def process_image_from_array(image_array, processing_type='default'):
+def process_image_from_array(image_array, mode='default'):
     processed_image_array = image_array
 
-    # TODO: implement processing type
+    # TODO: implement mode
 
     processed_image_array = cv2.cvtColor(processed_image_array, cv2.COLOR_BGR2GRAY)
     processed_image_array = cv2.Canny(processed_image_array, threshold1=50, threshold2=250)
 
     return processed_image_array
 
-def process_image(image, processing_type='default'):
+def process_image(image, mode='default'):
     if type(image) == str:
         image = Image.open(image)
-    
+
     processed_image_array = process_image_from_array(
         np.array(image),
-        processing_type
+        mode
     )
 
     return Image.fromarray(processed_image_array)

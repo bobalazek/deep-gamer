@@ -5,9 +5,9 @@ from helpers.common import *
 now = datetime.datetime.now()
 data_dir = get_data_dir()
 activity = len(sys.argv) > 1 and sys.argv[1] or 'general'
-processing_type = len(sys.argv) > 2 and sys.argv[2] or 'default' # what type of processing will we do on this images?
+mode = len(sys.argv) > 2 and sys.argv[2] or 'default' # what type of processing will we do on this images?
 activity_raw_dir = os.path.join(data_dir, activity, 'raw')
-processed_dir = os.path.join(data_dir, activity, 'processed', processing_type)
+processed_dir = os.path.join(data_dir, activity, 'processed', mode)
 if not os.path.exists(processed_dir):
     os.makedirs(processed_dir)
 
@@ -56,7 +56,7 @@ def do_image_processing(image_data):
     image_name = os.path.basename(image_path)
     processed_image_path = os.path.join(processed_dir, image_name)
 
-    processed_image = process_image(image_path, processing_type)
+    processed_image = process_image(image_path, mode)
     processed_image.save(processed_image_path)
 
     with open(processed_images_file_path, 'a') as file_stream:
@@ -95,7 +95,7 @@ def do_session_directory_processing(session_directory, session_directory_images)
 # Main
 if __name__ == "__main__":
     last_time = time.time()
-    
+
     # Prepare files
     prepare_files()
 
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     print('=' * 32)
     print('Activity: {0}'.format(activity))
     print('=' * 32)
-    print('Processing type: {0}'.format(processing_type))
+    print('Mode: {0}'.format(mode))
     print('=' * 32)
 
     # Already processed images

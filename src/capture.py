@@ -1,8 +1,8 @@
 import sys, os, time, datetime, json
-import win32api
 from helpers.common import *
-from helpers.keyboard_capture import get_pressed_keyboard_keys, check_for_capturing_hotkeys
-from helpers.gamepad_capture import get_pressed_gamepad_buttons_and_axes
+from helpers.capture.keyboard import get_pressed_keyboard_keys, check_for_capturing_hotkeys
+from helpers.capture.gamepad import get_pressed_gamepad_buttons_and_axes
+from helpers.capture.mouse import get_mouse_position_and_buttons
 
 # Preparation
 is_capturing = False # If we should be capturing
@@ -13,10 +13,12 @@ session_id = now.strftime('%Y-%m-%d_%H%M%S')
 data_dir = get_data_dir()
 activity = len(sys.argv) > 1 and sys.argv[1] or 'general'
 session_dir = os.path.join(data_dir, activity, 'raw', session_id)
-if not os.path.exists(session_dir):
-    os.makedirs(session_dir)
 
 # Functions
+def prepare_session_dir():
+    if not os.path.exists(session_dir):
+        os.makedirs(session_dir)
+
 def capture_image(timestamp):
     filename = timestamp.replace(':', '') + '.png'
     filepath = os.path.join(session_dir, filename)
@@ -27,26 +29,10 @@ def capture_image(timestamp):
 
 def capture_inputs():    
     return {
-        'keyboard': get_keyboard_inputs(),
-        'mouse': get_mouse_inputs(),
-        'gamepad': get_gamepad_inputs(),
+        'keyboard': get_pressed_keyboard_keys(),
+        'mouse': get_mouse_position_and_buttons(),
+        'gamepad': get_pressed_gamepad_buttons_and_axes(),
     }
-
-def get_mouse_inputs():
-    return {
-        'position': win32api.GetCursorPos(),
-        'buttons': {
-            'left': win32api.GetKeyState(0x01) < 0,
-            'right': win32api.GetKeyState(0x02) < 0,
-            'middle': win32api.GetKeyState(0x04) < 0,
-        }
-    }
-
-def get_keyboard_inputs():
-    return get_pressed_keyboard_keys()
-
-def get_gamepad_inputs():
-    return get_pressed_gamepad_buttons_and_axes()
 
 def do_capturing():
     global inputs, is_capturing
@@ -67,6 +53,7 @@ def do_capturing():
             },
             'inputs': inputs,
         }
+
         with open(os.path.join(session_dir, 'log.txt'), 'a') as log_file:
             log_file.write(json.dumps(data) + "\n")
 
@@ -75,6 +62,8 @@ def do_capturing():
 # Main
 if __name__ == "__main__":
     last_time = time.time()
+
+    prepare_session_dir()
 
     print('Start at {0}'.format(now))
 

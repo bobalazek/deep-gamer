@@ -1,4 +1,4 @@
-from helpers.inputs import get_gamepad
+from libs.inputs import get_gamepad
 
 gamepad = {
     'buttons': {
