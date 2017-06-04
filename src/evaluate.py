@@ -11,7 +11,7 @@ if __name__ == "__main__":
 
         print('Last execution took {0} seconds.'.format(time.time() - last_time))
 
-        if not show_preview_window(processed_image):
+        if not show_preview_window([original_image, processed_image]):
             break
 
         last_time = time.time()

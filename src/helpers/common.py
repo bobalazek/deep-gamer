@@ -45,12 +45,32 @@ def process_image(image, mode='default', return_array=False):
 
     return Image.fromarray(processed_image_array)
 
-def show_preview_window(image):
-    if type(image) is not np.ndarray:
-        image = np.array(image)
+def show_preview_window(images_array):
+    final_images_array = []
+
+    for image in images_array:
+        mode = None # https://stackoverflow.com/questions/32192671/pil-image-mode-i-is-grayscale
+
+        # TODO: also add other modes
+        if image.mode is 'L':
+            mode = cv2.COLOR_GRAY2RGB
+
+        if mode is None:
+            final_images_array.append(np.array(image))
+        else:
+            final_images_array.append(
+                cv2.cvtColor(
+                    np.array(image),
+                    mode
+                )
+            )
+
+    preview_image_array = np.hstack(final_images_array)
+
+    # TODO: figure out why some colors are inversed
 
     cv2.namedWindow('Preview', cv2.WINDOW_NORMAL)
-    cv2.imshow('Preview', image)
+    cv2.imshow('Preview', preview_image_array)
 
     if cv2.waitKey(25) & 0xFF == ord('q'):
         cv2.destroyAllWindows()

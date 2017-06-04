@@ -35,7 +35,7 @@ def get_activity_raw_session_dirs():
         x[0] for x in os.walk(activity_raw_dir)
     ]
 
-    if len(activity_raw_session_dirs) == 0:
+    if len(activity_raw_session_dirs) is 0:
         sys.exit('Exiting. Did not found any sessions for this activity')
 
     activity_raw_session_dirs.pop(0) # Remove first object, as it's the directory itself
