@@ -104,7 +104,6 @@ def get_model():
         height,
         width,
         4, # the number of outputs; see the convert_controls_to_array() method on how many outputs you have
-        checkpoint_path=network_checkpoint_dir,
         tensorboard_dir=network_logs_dir
     )
 
