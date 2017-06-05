@@ -1,4 +1,4 @@
-import json
+import os, json
 import numpy as np
 import cv2
 from PIL import Image
@@ -18,6 +18,7 @@ activity = args['activity']
 mode = args['mode']
 network_dir = os.path.join(data_dir, activity, 'network', mode)
 network_checkpoint_dir = os.path.join(network_dir, 'checkpoint')
+network_logs_dir = os.path.join(network_dir, 'logs')
 
 # Methods
 # MUST return a tuple
@@ -89,13 +90,21 @@ def get_xy(activity, mode):
     return X, Y
 
 def get_model():
+    # Prepare dirs
+    if not os.path.exists(network_checkpoint_dir):
+        os.makedirs(network_checkpoint_dir)
+    
+    if not os.path.exists(network_logs_dir):
+        os.makedirs(network_logs_dir)
+    
     width, height = get_processed_image_size()
 
     return inception_v3(
         height,
         width,
         4, # the number of outputs; see the convert_controls_to_array() method on how many outputs you have
-        network_checkpoint_dir
+        checkpoint_path=network_checkpoint_dir,
+        tensorboard_dir=network_logs_dir
     )
 
 def get_model_run_id():
