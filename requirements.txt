@@ -6,3 +6,4 @@ tflearn
 pillow
 pyglet
 inputs
+h5py

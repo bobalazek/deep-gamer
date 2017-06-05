@@ -3,7 +3,6 @@ import cv2
 import argparse
 import numpy as np
 from PIL import Image, ImageGrab
-from helpers.custom import *
 
 def prepare_args():
     parser = argparse.ArgumentParser(description='Deep Gamer')

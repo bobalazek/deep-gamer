@@ -142,7 +142,7 @@ def inception_v3(input1_size, input2_size, output_size, checkpoint_path, learnin
     )
     model = tflearn.DNN(
         network,
-        checkpoint_path=checkpoint_path
+        checkpoint_path=checkpoint_path,
         max_checkpoints=1,
         tensorboard_verbose=2
     )
