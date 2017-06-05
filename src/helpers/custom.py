@@ -3,24 +3,45 @@ import numpy as np
 import cv2
 from PIL import Image
 from helpers.common import *
+from helpers.models.inception_v3 import inception_v3
 
 '''
 In this file we will specify all the custom methods, 
 that can/will be different from game to game.
 '''
 
+# Preparation
+data_dir = get_data_dir()
+args = get_args()
+
+activity = args['activity']
+mode = args['mode']
+network_dir = os.path.join(data_dir, activity, 'network', mode)
+network_checkpoint_dir = os.path.join(network_dir, 'checkpoint')
+
+# Methods
+# MUST return a tuple
+def get_processed_image_size():
+    return (640, 480)
+
 # MUST return an array
 # View the full list inside src/capture/keyboard.py
 def get_toggle_capture_hotkeys():
     return ['left_control', 'F11']
 
+# MUST return an integer
+def get_epochs():
+    return 32
+
 # MUST return a np.array()
 def preprocess_image(image):
+    image = image.resize(processed_image_size, Image.ANTIALIAS)
+
     image_array = np.array(image)
 
     image_array = cv2.cvtColor(image_array, cv2.COLOR_BGR2GRAY)
     image_array = cv2.Canny(image_array, threshold1=50, threshold2=250)
-    
+
     return image_array
 
 # MUST return a dictionary
@@ -67,3 +88,16 @@ def get_xy(activity, mode):
         Y.append(convert_controls_to_array(row_data['controls']))
 
     return X, Y
+
+def get_model():
+    width, height = get_processed_image_size()
+
+    return inception_v3(
+        width,
+        height,
+        len(convert_controls_to_array),
+        network_checkpoint_dir
+    )
+
+def get_model_run_id():
+    return print('{0}-{1}'.format(activity, mode))
