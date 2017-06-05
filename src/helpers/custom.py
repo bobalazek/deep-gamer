@@ -39,8 +39,7 @@ def preprocess_image(image):
 
     image_array = np.array(image)
 
-    image_array = cv2.cvtColor(image_array, cv2.COLOR_BGR2GRAY)
-    image_array = cv2.Canny(image_array, threshold1=50, threshold2=250)
+    image_array = cv2.cvtColor(image_array, cv2.COLOR_BGR2RGB)
 
     return image_array
 
@@ -93,8 +92,8 @@ def get_model():
     width, height = get_processed_image_size()
 
     return inception_v3(
-        width,
         height,
+        width,
         4, # the number of outputs; see the convert_controls_to_array() method on how many outputs you have
         network_checkpoint_dir
     )
