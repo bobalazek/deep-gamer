@@ -4,18 +4,20 @@ from helpers.common import *
 # Preparation
 now = datetime.datetime.now()
 data_dir = get_data_dir()
-activity = len(sys.argv) > 1 and sys.argv[1] or 'general'
-mode = len(sys.argv) > 2 and sys.argv[2] or 'default' # what type of processing will we do on this images?
+args = get_args()
+
+activity = args['activity']
+mode = args['mode']
 activity_raw_dir = os.path.join(data_dir, activity, 'raw')
 processed_dir = os.path.join(data_dir, activity, 'processed', mode)
-if not os.path.exists(processed_dir):
-    os.makedirs(processed_dir)
-
 processed_images_file_path = os.path.join(processed_dir, 'processed_images.txt') # Saves all the processed images
 processed_data_file_path = os.path.join(processed_dir, 'data.txt') # Saves the final processed data, such as: left, right, forward, backward, ... means, ONLY the core data (as opposed to all the raw data we get while capturing)
     
 # Functions
-def prepare_files():
+def prepare_folders_and_files():
+    if not os.path.exists(processed_dir):
+        os.makedirs(processed_dir)
+
     if not os.path.exists(processed_images_file_path):
         processed_images_file = open(processed_images_file_path, 'w+').read()
 
@@ -56,7 +58,7 @@ def do_image_processing(image_data):
     image_name = os.path.basename(image_path)
     processed_image_path = os.path.join(processed_dir, image_name)
 
-    processed_image = process_image(image_path, mode)
+    processed_image = process_image(image_path)
     processed_image.save(processed_image_path)
 
     with open(processed_images_file_path, 'a') as file_stream:
@@ -96,8 +98,8 @@ def do_session_directory_processing(session_directory, session_directory_images)
 if __name__ == "__main__":
     last_time = time.time()
 
-    # Prepare files
-    prepare_files()
+    # Prepare folders and files
+    prepare_folders_and_files()
 
     # General information
     print('Start at {0}'.format(now))

@@ -9,13 +9,14 @@ is_capturing = False # If we should be capturing
 toggle_capturing_hotkeys = ['left_control', 'F11'] # view the full codes map inside helpers/keyboard_capture.py
 inputs = None # Saves the current input on every tick
 now = datetime.datetime.now()
-session_id = now.strftime('%Y-%m-%d_%H%M%S')
 data_dir = get_data_dir()
-activity = len(sys.argv) > 1 and sys.argv[1] or 'general'
-session_dir = os.path.join(data_dir, activity, 'raw', session_id)
+args = get_args()
+
+session_id = now.strftime('%Y-%m-%d_%H%M%S')
+session_dir = os.path.join(data_dir, args['activity'], 'raw', session_id)
 
 # Functions
-def prepare_session_dir():
+def prepare_folders_and_files():
     if not os.path.exists(session_dir):
         os.makedirs(session_dir)
 
@@ -24,7 +25,7 @@ def capture_image(timestamp):
     filepath = os.path.join(session_dir, filename)
 
     grab_image(filepath)
-    
+
     return filename, filepath
 
 def capture_inputs():    
@@ -34,7 +35,7 @@ def capture_inputs():
         'gamepad': get_pressed_gamepad_buttons_and_axes(),
     }
 
-def do_capturing():
+def capture():
     global inputs, is_capturing
 
     now = datetime.datetime.now()
@@ -63,14 +64,15 @@ def do_capturing():
 if __name__ == "__main__":
     last_time = time.time()
 
-    prepare_session_dir()
+    # Prepare folders and files
+    prepare_folders_and_files()
 
     print('Start at {0}'.format(now))
 
     while True:
         inputs = capture_inputs()
 
-        if do_capturing():
+        if capture():
             print('Last execution took {0} seconds.'.format(time.time() - last_time))
 
         last_time = time.time()

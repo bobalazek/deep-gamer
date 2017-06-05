@@ -1,11 +1,40 @@
 import os
 import cv2
+import argparse
 import numpy as np
 from PIL import Image, ImageGrab
 
+def prepare_args():
+    parser = argparse.ArgumentParser(description='Deep Gamer')
+
+    parser.add_argument(
+        '-a',
+        '--activity',
+        help='Which activity will you be doing (ex.: driving, walking, running, ...)?',
+        default='general'
+    )
+    parser.add_argument(
+        '-m',
+        '--mode',
+        help='Which mode should we use when processing/evaluating the raw data? Usefull when processing/evaluating/testing multiple results with the same raw data.',
+        default='default'
+    )
+
+    return parser.parse_args()
+
+def get_args():
+    args = prepare_args()
+
+    return {
+        'activity': args.activity,
+        'mode': args.mode,
+    }
+
 def grab_image(save_path=False):
     # TODO: fix -- not working in the MINGW64 terminal
+
     image = ImageGrab.grab()
+
     if save_path != False:
         image.save(save_path)
 
@@ -21,24 +50,19 @@ def get_data_dir():
         )
     )
 
-def process_image_from_array(image_array, mode='default'):
-    processed_image_array = image_array
+def preprocess_image(image):
+    image_array = np.array(image)
 
-    # TODO: implement mode
+    image_array = cv2.cvtColor(image_array, cv2.COLOR_BGR2GRAY)
+    image_array = cv2.Canny(image_array, threshold1=50, threshold2=250)
 
-    processed_image_array = cv2.cvtColor(processed_image_array, cv2.COLOR_BGR2GRAY)
-    processed_image_array = cv2.Canny(processed_image_array, threshold1=50, threshold2=250)
+    return image_array
 
-    return processed_image_array
-
-def process_image(image, mode='default', return_array=False):
+def process_image(image, return_array=False):
     if type(image) is str:
         image = Image.open(image)
 
-    processed_image_array = process_image_from_array(
-        np.array(image),
-        mode
-    )
+    processed_image_array = preprocess_image(image)
 
     if return_array:
         return processed_image_array
