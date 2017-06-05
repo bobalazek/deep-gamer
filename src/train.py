@@ -15,12 +15,12 @@ if __name__ == "__main__":
     model = get_model()
     model_run_id = get_model_run_id()
     epochs = get_epochs()
-    
+
     print('Start at {0}'.format(now))
 
     for i in range(epochs):
         print('Starting epoch {0}'.format(i))
-        
+
         X, Y = get_xy(activity, mode)
         count = len(X)
         validation_set_count = int(count * 0.10)
@@ -28,14 +28,13 @@ if __name__ == "__main__":
         train_y = Y[:-validation_set_count]
         test_x = Y[-validation_set_count:]
         test_y = Y[-validation_set_count:]
-        
-        with tf.device('/gpu:0'):
-            model.fit(
-                train_x,
-                train_y,
-                validation_set=(test_x, test_y),
-                n_epoch=1,
-                show_metric=True,
-                snapshot_epoch=False,
-                run_id=model_run_id
-            )
+
+        model.fit(
+            train_x,
+            train_y,
+            validation_set=(test_x, test_y),
+            n_epoch=1,
+            show_metric=True,
+            snapshot_epoch=False,
+            run_id=model_run_id
+        )
