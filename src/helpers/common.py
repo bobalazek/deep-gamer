@@ -51,9 +51,6 @@ def get_data_dir():
         )
     )
 
-def preprocess_image(image):
-    return custom_preprocess_image(image)
-
 def process_image(image, return_array=False):
     if type(image) is str:
         image = Image.open(image)

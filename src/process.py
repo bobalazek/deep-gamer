@@ -26,7 +26,6 @@ def prepare_folders_and_files():
 
 def get_processed_images():
     processed_images_file = open(processed_images_file_path, 'r+').read()
-
     processed_images = processed_images_file.split("\n")
     processed_images = [x for x in processed_images if x != ''] # TODO: find a quicker solution? filter()?
     
@@ -68,7 +67,7 @@ def do_image_processing(image_data):
         file_stream.write(json.dumps(
             get_image_processing_data_row(
                 processed_image_path,
-                image_data
+                image_data['inputs']
             )
         ) + "\n")
 
