@@ -25,7 +25,7 @@ def inception_v3(
     input1_size,
     input2_size,
     output_size,
-    checkpoint_path,
+    checkpoint_path=None,
     learning_rate=0.001,
     tensorboard_dir='/tmp/tflearn_logs'
     ):
