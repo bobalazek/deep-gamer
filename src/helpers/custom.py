@@ -1,4 +1,4 @@
-import os, json
+import os, datetime, json
 import numpy as np
 import cv2
 from PIL import Image
@@ -11,6 +11,7 @@ that can/will be different from game to game.
 '''
 
 # Preparation
+now = datetime.datetime.now()
 data_dir = get_data_dir()
 args = get_args()
 
@@ -71,7 +72,7 @@ def convert_controls_to_array(controls):
         controls['right'] and 1 or 0,
     ]
 
-def get_xy(activity, mode):
+def get_xy():
     X = []
     Y = []
 
@@ -107,5 +108,8 @@ def get_model():
         tensorboard_dir=network_logs_dir
     )
 
+def save_model(model):
+    model.save(os.path.join(network_dir, 'network.tflearn'))
+
 def get_model_run_id():
-    return print('{0}-{1}'.format(activity, mode))
+    return now.strftime('%Y%m%d_%H%M%S') + '_' + '{0}_{1}'.format(activity, mode)

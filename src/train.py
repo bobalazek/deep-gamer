@@ -5,10 +5,6 @@ from helpers.custom import *
 
 # Preparation
 now = datetime.datetime.now()
-args = get_args()
-
-activity = args['activity']
-mode = args['mode']
 
 # Main
 if __name__ == "__main__":
@@ -21,7 +17,7 @@ if __name__ == "__main__":
     for i in range(epochs):
         print('Starting epoch {0}'.format(i))
 
-        X, Y = get_xy(activity, mode)
+        X, Y = get_xy()
         count = len(X)
         validation_set_count = int(count * 0.10)
         train_x = X[:-validation_set_count]
@@ -38,3 +34,7 @@ if __name__ == "__main__":
             snapshot_epoch=False,
             run_id=model_run_id
         )
+        
+        if i % 8 == 0:
+            print('Saving model ...')
+            save_model(model)
