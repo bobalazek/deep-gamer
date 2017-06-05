@@ -1,5 +1,6 @@
 import sys, os, json, glob, time, datetime
 from helpers.common import *
+from helpers.image import *
 
 # Preparation
 now = datetime.datetime.now()

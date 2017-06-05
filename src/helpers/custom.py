@@ -35,7 +35,7 @@ def get_epochs():
 
 # MUST return a np.array()
 def preprocess_image(image):
-    image = image.resize(processed_image_size, Image.ANTIALIAS)
+    image = image.resize(get_processed_image_size(), Image.ANTIALIAS)
 
     image_array = np.array(image)
 
@@ -82,7 +82,7 @@ def get_xy(activity, mode):
     processed_data = [x for x in processed_data if x != ''] # TODO: find a quicker solution? filter()?
 
     for row in processed_data:
-        row_data = json.loads(image_raw_data) # that returns the same results as defined in the get_image_processing_data_row()
+        row_data = json.loads(row) # that returns the same results as defined in the get_image_processing_data_row()
 
         X.append(np.array(Image.open(row_data['image_path'])))
         Y.append(convert_controls_to_array(row_data['controls']))
@@ -95,7 +95,7 @@ def get_model():
     return inception_v3(
         width,
         height,
-        len(convert_controls_to_array),
+        4, # the number of outputs; see the convert_controls_to_array() method on how many outputs you have
         network_checkpoint_dir
     )
 

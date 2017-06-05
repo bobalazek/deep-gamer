@@ -1,9 +1,14 @@
 import datetime
+import tensorflow as tf
 from helpers.common import *
 from helpers.custom import *
 
 # Preparation
 now = datetime.datetime.now()
+args = get_args()
+
+activity = args['activity']
+mode = args['mode']
 
 # Main
 if __name__ == "__main__":
@@ -13,21 +18,24 @@ if __name__ == "__main__":
     
     print('Start at {0}'.format(now))
 
-    for i in xrange(epochs):
+    for i in range(epochs):
         print('Starting epoch {0}'.format(i))
         
-        X, Y = get_xy()
-        train_x = X[:-100]
-        train_Y = Y[:-100]
-        test_x = Y[-100:]
-        test_Y = Y[-100:]
+        X, Y = get_xy(activity, mode)
+        count = len(X)
+        validation_set_count = int(count * 0.10)
+        train_x = X[:-validation_set_count]
+        train_y = Y[:-validation_set_count]
+        test_x = Y[-validation_set_count:]
+        test_y = Y[-validation_set_count:]
         
-        model.fit(
-            train_x,
-            train_y,
-            validation_set=(test_x, test_y),
-            n_epoch=1,
-            show_metric=True,
-            snapshot_epoch=False,
-            run_id=model_run_id
-        )
+        with tf.device('/gpu:0'):
+            model.fit(
+                train_x,
+                train_y,
+                validation_set=(test_x, test_y),
+                n_epoch=1,
+                show_metric=True,
+                snapshot_epoch=False,
+                run_id=model_run_id
+            )
