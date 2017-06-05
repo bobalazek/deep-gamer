@@ -1,13 +1,14 @@
 import sys, os, time, datetime, json
 from helpers.common import *
+from helpers.custom import *
 from helpers.capture.keyboard import get_pressed_keyboard_keys, check_for_capturing_hotkeys
 from helpers.capture.gamepad import get_pressed_gamepad_buttons_and_axes
 from helpers.capture.mouse import get_mouse_position_and_buttons
 
 # Preparation
 is_capturing = False # If we should be capturing
-toggle_capturing_hotkeys = ['left_control', 'F11'] # view the full codes map inside helpers/keyboard_capture.py
 inputs = None # Saves the current input on every tick
+toggle_capture_hotkeys = get_toggle_capture_hotkeys()
 now = datetime.datetime.now()
 data_dir = get_data_dir()
 args = get_args()
@@ -41,7 +42,7 @@ def capture():
     now = datetime.datetime.now()
     timestamp = now.isoformat()
 
-    if check_for_capturing_hotkeys(inputs['keyboard'], toggle_capturing_hotkeys):
+    if check_for_capturing_hotkeys(inputs['keyboard'], toggle_capture_hotkeys):
         is_capturing = not is_capturing
 
     if is_capturing:

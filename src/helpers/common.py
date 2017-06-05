@@ -3,6 +3,7 @@ import cv2
 import argparse
 import numpy as np
 from PIL import Image, ImageGrab
+from helpers.custom import *
 
 def prepare_args():
     parser = argparse.ArgumentParser(description='Deep Gamer')
@@ -51,12 +52,7 @@ def get_data_dir():
     )
 
 def preprocess_image(image):
-    image_array = np.array(image)
-
-    image_array = cv2.cvtColor(image_array, cv2.COLOR_BGR2GRAY)
-    image_array = cv2.Canny(image_array, threshold1=50, threshold2=250)
-
-    return image_array
+    return custom_preprocess_image(image)
 
 def process_image(image, return_array=False):
     if type(image) is str:

@@ -65,19 +65,12 @@ def do_image_processing(image_data):
         file_stream.write(image_path + "\n")
 
     with open(processed_data_file_path, 'a') as file_stream:
-        file_stream.write(json.dumps({
-            'image_path': processed_image_path,
-            'controls': {
-                'forward': image_data['inputs']['keyboard']['w'] or 
-                    image_data['inputs']['gamepad']['axes']['right_trigger'] > 0,
-                'backward': image_data['inputs']['keyboard']['s'] or 
-                    image_data['inputs']['gamepad']['axes']['left_trigger'] > 0,
-                'left': image_data['inputs']['keyboard']['a'] or 
-                    image_data['inputs']['gamepad']['axes']['left']['x'] < 0,
-                'right': image_data['inputs']['keyboard']['d'] or 
-                    image_data['inputs']['gamepad']['axes']['left']['x'] > 0,
-            },
-        }) + "\n")
+        file_stream.write(json.dumps(
+            get_image_processing_data_row(
+                processed_image_path,
+                image_data
+            )
+        ) + "\n")
 
 def do_session_directory_processing(session_directory, session_directory_images):
     print('Processing images from directory {0}'.format(session_directory))
