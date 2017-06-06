@@ -17,4 +17,4 @@
 Borut Balazek <bobalazek124@gmail.com> (http://bobalazek.com)
 
 ## License
-Proprietary
+Proprietary - All rights reserved - Borut Balazek <bobalazek124@gmail.com>

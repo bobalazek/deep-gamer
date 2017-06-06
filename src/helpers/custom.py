@@ -37,7 +37,7 @@ def get_epochs():
 
 # MUST return a np.array()
 def preprocess_image(image):
-    image = image.resize(get_processed_image_size(), Image.ANTIALIAS)
+    image.resize(get_processed_image_size(), Image.ANTIALIAS)
 
     image_array = np.array(image)
 
@@ -53,15 +53,18 @@ def get_image_processing_data_row(processed_image_path, inputs):
     }
 
 def get_controls_from_inputs(inputs):
+    forward = inputs['keyboard']['w'] or inputs['gamepad']['axes']['right_trigger'] > 0
+    backward = inputs['keyboard']['s'] or inputs['gamepad']['axes']['left_trigger'] > 0
+    left = inputs['keyboard']['a'] or  inputs['gamepad']['axes']['left']['x'] < 0
+    right = inputs['keyboard']['d'] or inputs['gamepad']['axes']['left']['x'] > 0
+    
     return {
-        'forward': inputs['keyboard']['w'] or 
-            inputs['gamepad']['axes']['right_trigger'] > 0,
-        'backward': inputs['keyboard']['s'] or 
-            inputs['gamepad']['axes']['left_trigger'] > 0,
-        'left': inputs['keyboard']['a'] or 
-            inputs['gamepad']['axes']['left']['x'] < 0,
-        'right': inputs['keyboard']['d'] or 
-            inputs['gamepad']['axes']['left']['x'] > 0,
+        'forward': forward,
+        'backward': backward,
+        'left': left,
+        'right': right,
+        'forward+left': forward and left,
+        'forward+right': forward and right,
     }
 
 def convert_controls_to_array(controls):
@@ -70,6 +73,8 @@ def convert_controls_to_array(controls):
         controls['backward'] and 1 or 0,
         controls['left'] and 1 or 0,
         controls['right'] and 1 or 0,
+        controls['forward+left'] and 1 or 0,
+        controls['forward+right'] and 1 or 0,
     ]
 
 def get_xy():
@@ -103,7 +108,7 @@ def get_model():
     return inception_v3(
         height,
         width,
-        4, # the number of outputs; see the convert_controls_to_array() method on how many outputs you have
+        6, # the number of outputs; see the convert_controls_to_array() method on how many outputs you have
         tensorboard_dir=network_logs_dir
     )
 

@@ -1,4 +1,4 @@
-import datetime
+import sys, datetime
 import tensorflow as tf
 from helpers.common import *
 from helpers.custom import *
@@ -13,9 +13,11 @@ if __name__ == "__main__":
     epochs = get_epochs()
 
     print('Start at {0}'.format(now))
+    sys.stdout.flush()
 
     for i in range(epochs):
         print('Starting epoch {0}'.format(i))
+        sys.stdout.flush()
 
         X, Y = get_xy()
         count = len(X)
@@ -37,4 +39,5 @@ if __name__ == "__main__":
         
         if i % 8 == 0:
             print('Saving model ...')
+            sys.stdout.flush()
             save_model(model)

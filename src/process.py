@@ -55,6 +55,8 @@ def do_image_processing(image_data):
     image_path = image_data['image']['path']
 
     print('Processing image {0}'.format(image_path))
+    sys.stdout.flush()
+
     image_name = os.path.basename(image_path)
     processed_image_path = os.path.join(processed_dir, image_name)
 
@@ -74,6 +76,7 @@ def do_image_processing(image_data):
 
 def do_session_directory_processing(session_directory, session_directory_images):
     print('Processing images from directory {0}'.format(session_directory))
+    sys.stdout.flush()
 
     for image_raw_data in session_directory_images:
         image_data = json.loads(image_raw_data)
@@ -83,9 +86,11 @@ def do_session_directory_processing(session_directory, session_directory_images)
             do_image_processing(image_data)
         else:
             print('The image {0} was already processed'.format(image_path))
+            sys.stdout.flush()
 
     print('Images from directory {0} were processed'.format(session_directory))
     print('-' * 32)
+    sys.stdout.flush()
     
 # Main
 if __name__ == "__main__":
@@ -101,36 +106,45 @@ if __name__ == "__main__":
     print('=' * 32)
     print('Mode: {0}'.format(mode))
     print('=' * 32)
+    sys.stdout.flush()
 
     # Already processed images
     processed_images = get_processed_images()
     print('Already processed images: {0}'.format(len(processed_images)))
     print('=' * 32)
+    sys.stdout.flush()
 
     # Activity session directories
     activity_raw_session_dirs = get_activity_raw_session_dirs()
     print('Found activity session directories:')
     print(activity_raw_session_dirs)
     print('=' * 32)
+    sys.stdout.flush()
 
     # Start processing per directory
     print('Starting processing sessions directories ...')
     print('=' * 32)
+    sys.stdout.flush()
+
     for session_directory in activity_raw_session_dirs:
         session_directory_log_file_path = os.path.join(session_directory, 'log.txt')
 
         # Jump out, as we did not find any data in this session
         if not os.path.exists(session_directory_log_file_path):
             print('Did not found any log file in {0}'.format(session_directory))
+            sys.stdout.flush()
+
             continue
 
         session_directory_images = get_session_directory_images(session_directory_log_file_path)
 
         print('Processing directory {0}'.format(session_directory))
         print('Found {0} images'.format(len(session_directory_images)))
+        sys.stdout.flush()
 
         if len(session_directory_images) > 0:
             do_session_directory_processing(session_directory, session_directory_images)
 
         print('Directory {0} processed'.format(session_directory))
         print('=' * 32)
+        sys.stdout.flush()

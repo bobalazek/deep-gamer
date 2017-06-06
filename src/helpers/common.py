@@ -30,13 +30,11 @@ def get_args():
         'mode': args.mode,
     }
 
-def grab_image(save_path=False):
-    # TODO: fix -- not working in the MINGW64 terminal
-
+def grab_image(file_path=False, file_format='PNG', **options):
     image = ImageGrab.grab()
 
-    if save_path != False:
-        image.save(save_path)
+    if file_path != False:
+        image.save(file_path, file_format, **options)
 
     return image
 

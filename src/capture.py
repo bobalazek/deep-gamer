@@ -22,10 +22,11 @@ def prepare_folders_and_files():
         os.makedirs(session_dir)
 
 def capture_image(timestamp):
-    filename = timestamp.replace(':', '') + '.png'
+    filename = timestamp.replace(':', '') + '.jpg'
     filepath = os.path.join(session_dir, filename)
 
-    grab_image(filepath)
+    # TODO: batch image save?
+    grab_image(file_path=filepath, file_format='JPEG')
 
     return filename, filepath
 
@@ -69,11 +70,13 @@ if __name__ == "__main__":
     prepare_folders_and_files()
 
     print('Start at {0}'.format(now))
+    sys.stdout.flush()
 
     while True:
         inputs = capture_inputs()
 
         if capture():
             print('Last execution took {0} seconds.'.format(time.time() - last_time))
+            sys.stdout.flush()
 
         last_time = time.time()
