@@ -37,7 +37,7 @@ def get_epochs():
 
 # MUST return a np.array()
 def preprocess_image(image):
-    image.resize(get_processed_image_size(), Image.ANTIALIAS)
+    image = image.resize(get_processed_image_size(), Image.ANTIALIAS)
 
     image_array = np.array(image)
 
