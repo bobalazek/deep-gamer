@@ -123,7 +123,7 @@ def get_xy():
 
     return X, Y
 
-def get_model():
+def get_model(load_existing=False):
     # Prepare dirs 
     if not os.path.exists(network_logs_dir):
         os.makedirs(network_logs_dir)
@@ -133,7 +133,7 @@ def get_model():
     output_size = len(convert_controls_to_array({}))
 
     # Return the model
-    return inception_v3(
+    model = inception_v3(
         input1_size,
         input2_size,
         output_size,
@@ -142,8 +142,41 @@ def get_model():
         best_checkpoint_path=network_checkpoint_path
     )
 
+    if load_existing:
+        model.load(network_model_path)
+
+    return model
+
 def save_model(model):
     model.save(network_model_path)
+
+def get_prediction(model, X):
+    action = None
+    prediction = model.predict([X])
+    prediction = prediction[0]
+    sys.stdout.flush()
+    
+    index = np.argmax(prediction)
+
+    # TODO: make it nicer ...
+    if index == 0:
+        action = 'forward'
+    elif index == 1:
+        action = 'backward'
+    elif index == 2:
+        action = 'left'
+    elif index == 3:
+        action = 'right'
+    elif index == 4:
+        action = 'forward+left'
+    elif index == 5:
+        action = 'forward+right'
+
+    return {
+        'action': action,
+        'action_confidence': prediction[index],
+        'raw': prediction,
+    }
 
 def get_model_run_id():
     return now.strftime('%Y%m%d_%H%M%S') + '_' + '{0}_{1}'.format(activity, mode)

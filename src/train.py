@@ -8,6 +8,9 @@ now = datetime.datetime.now()
 
 # Main 
 if __name__ == "__main__":
+    print('Loading model ...')
+    sys.stdout.flush()
+
     model = get_model()
     model_run_id = get_model_run_id()
     epochs = get_epochs()
@@ -21,14 +24,15 @@ if __name__ == "__main__":
 
         X, Y = get_xy()
 
-        model.fit(
-            X, Y,
-            validation_set=get_validation_set_percentage(),
-            n_epoch=1,
-            show_metric=True,
-            snapshot_epoch=False,
-            run_id=model_run_id
-        )
+        with tf.device('/gpu:0'):
+            model.fit(
+                X, Y,
+                validation_set=get_validation_set_percentage(),
+                n_epoch=1,
+                show_metric=True,
+                snapshot_epoch=False,
+                run_id=model_run_id
+            )
 
         print('Saving model ...')
         sys.stdout.flush()
