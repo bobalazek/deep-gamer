@@ -34,11 +34,11 @@ def get_toggle_capture_hotkeys():
 
 # MUST return an integer
 def get_epochs():
-    return 8
+    return 512
 
 # MUST return an integer
 def get_xy_batch_size():
-    return 500
+    return 40
 
 # MUST return a boolean
 def get_xy_shuffle():

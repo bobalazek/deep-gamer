@@ -22,8 +22,7 @@ if __name__ == "__main__":
         X, Y = get_xy()
 
         model.fit(
-            X,
-            Y,
+            X, Y,
             validation_set=get_validation_set_percentage(),
             n_epoch=1,
             show_metric=True,
