@@ -20,17 +20,11 @@ if __name__ == "__main__":
         sys.stdout.flush()
 
         X, Y = get_xy()
-        count = len(X)
-        validation_set_count = int(count * 0.10)
-        train_x = X[:-validation_set_count]
-        train_y = Y[:-validation_set_count]
-        test_x = Y[-validation_set_count:]
-        test_y = Y[-validation_set_count:]
 
         model.fit(
-            train_x,
-            train_y,
-            validation_set=(test_x, test_y),
+            X,
+            Y,
+            validation_set=get_validation_set_percentage(),
             n_epoch=1,
             show_metric=True,
             snapshot_epoch=False,
@@ -43,4 +37,5 @@ if __name__ == "__main__":
         save_model(model)
 
         print('Model saved.')
+        print('=' * 32)
         sys.stdout.flush()

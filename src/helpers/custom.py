@@ -1,4 +1,4 @@
-import os, datetime, json
+import sys, os, datetime, json, random
 import numpy as np
 import cv2
 from PIL import Image
@@ -18,8 +18,9 @@ args = get_args()
 activity = args['activity']
 mode = args['mode']
 network_dir = os.path.join(data_dir, activity, 'network', mode)
-network_checkpoint_dir = os.path.join(network_dir, 'checkpoint')
+network_checkpoint_path = os.path.join(network_dir, 'checkpoint')
 network_logs_dir = os.path.join(network_dir, 'logs')
+network_model_path = os.path.join(network_dir, 'model')
 
 # Methods
 # MUST return a tuple
@@ -33,7 +34,20 @@ def get_toggle_capture_hotkeys():
 
 # MUST return an integer
 def get_epochs():
-    return 32
+    return 8
+
+# MUST return an integer
+def get_xy_batch_size():
+    return 500
+
+# MUST return a boolean
+def get_xy_shuffle():
+    return True
+
+
+# MUST return an float
+def get_validation_set_percentage():
+    return 0.1
 
 # MUST return a np.array()
 def preprocess_image(image):
@@ -83,6 +97,8 @@ def convert_controls_to_array(controls):
 def get_xy():
     X = []
     Y = []
+    batch_size = get_xy_batch_size()
+    should_shuffle = get_xy_shuffle()
 
     processed_dir = os.path.join(data_dir, activity, 'processed', mode)
     processed_data_file_path = os.path.join(processed_dir, 'data.txt')
@@ -90,33 +106,44 @@ def get_xy():
     processed_data = processed_data_file.split("\n")
     processed_data = [x for x in processed_data if x != ''] # TODO: find a quicker solution? filter()?
 
+    if should_shuffle:
+        random.shuffle(processed_data)
+
+    rows = 1
     for row in processed_data:
         row_data = json.loads(row) # that returns the same results as defined in the get_image_processing_data_row()
 
         X.append(np.array(Image.open(row_data['image_path'])))
         Y.append(convert_controls_to_array(row_data['controls']))
 
+        rows += 1
+
+        if rows > batch_size:
+            break
+
     return X, Y
 
 def get_model():
-    # Prepare dirs
-    if not os.path.exists(network_checkpoint_dir):
-        os.makedirs(network_checkpoint_dir)
-    
+    # Prepare dirs 
     if not os.path.exists(network_logs_dir):
         os.makedirs(network_logs_dir)
-    
-    width, height = get_processed_image_size()
 
+    # Prepare data
+    input2_size, input1_size = get_processed_image_size()
+    output_size = len(convert_controls_to_array({}))
+
+    # Return the model
     return inception_v3(
-        height,
-        width,
-        len(convert_controls_to_array({})),
-        tensorboard_dir=network_logs_dir
+        input1_size,
+        input2_size,
+        output_size,
+        tensorboard_dir=network_logs_dir,
+        checkpoint_path=network_checkpoint_path,
+        best_checkpoint_path=network_checkpoint_path
     )
 
 def save_model(model):
-    model.save(os.path.join(network_dir, 'network.tflearn'))
+    model.save(network_model_path)
 
 def get_model_run_id():
     return now.strftime('%Y%m%d_%H%M%S') + '_' + '{0}_{1}'.format(activity, mode)

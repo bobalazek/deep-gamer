@@ -26,8 +26,10 @@ def inception_v3(
     input2_size,
     output_size,
     checkpoint_path=None,
+    best_checkpoint_path=None,
     learning_rate=0.001,
-    tensorboard_dir='/tmp/tflearn_logs'
+    tensorboard_dir='/tmp/tflearn_logs',
+    best_val_accuracy=0.0
     ):
 
     network = input_data(shape=[None, input1_size, input2_size, 3])
@@ -294,6 +296,8 @@ def inception_v3(
                          loss='categorical_crossentropy',
                          learning_rate=learning_rate)
     model = tflearn.DNN(network, checkpoint_path=checkpoint_path,
+                        best_checkpoint_path=best_checkpoint_path,
+                        best_val_accuracy=best_val_accuracy,
                         max_checkpoints=1, tensorboard_verbose=2,
                         tensorboard_dir=tensorboard_dir)
 
