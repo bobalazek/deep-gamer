@@ -19,8 +19,7 @@ if __name__ == "__main__":
         original_image = grab_image()
         X = process_image(original_image, return_array=True)
 
-        # Temporary workaround on cuda not working while playing the game
-        with tf.device('/gpu:0'):
+        with tf.device(get_device('evaluate')):
             prediction = get_prediction(model, X)
             print('Prediction: {0}.'.format(prediction))
             sys.stdout.flush()

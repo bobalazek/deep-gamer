@@ -34,16 +34,19 @@ def get_toggle_capture_hotkeys():
 
 # MUST return an integer
 def get_epochs():
-    return 512
+    return 256
 
 # MUST return an integer
 def get_xy_batch_size():
-    return 40
+    return 1024
 
 # MUST return a boolean
 def get_xy_shuffle():
     return True
 
+# MUST return a string
+def get_device(type='train'):
+    return '/cpu:0'
 
 # MUST return an float
 def get_validation_set_percentage():
