@@ -6,7 +6,7 @@ from helpers.custom import *
 # Preparation
 now = datetime.datetime.now()
 
-# Main
+# Main 
 if __name__ == "__main__":
     model = get_model()
     model_run_id = get_model_run_id()
@@ -36,8 +36,11 @@ if __name__ == "__main__":
             snapshot_epoch=False,
             run_id=model_run_id
         )
-        
-        if i % 8 == 0:
-            print('Saving model ...')
-            sys.stdout.flush()
-            save_model(model)
+
+        print('Saving model ...')
+        sys.stdout.flush()
+
+        save_model(model)
+
+        print('Model saved.')
+        sys.stdout.flush()
