@@ -77,6 +77,7 @@ if __name__ == "__main__":
 
         if capture():
             print('Last execution took {0} seconds.'.format(time.time() - last_time))
+            print('Controls: {0}'.format(get_controls_from_inputs(inputs)))
             sys.stdout.flush()
 
         last_time = time.time()

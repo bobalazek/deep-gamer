@@ -63,18 +63,21 @@ def get_controls_from_inputs(inputs):
         'backward': backward,
         'left': left,
         'right': right,
-        'forward+left': forward and left,
-        'forward+right': forward and right,
     }
 
 def convert_controls_to_array(controls):
+    forward = 'forward' in controls and controls['forward']
+    backward = 'backward' in controls and controls['backward']
+    left = 'left' in controls and controls['left']
+    right = 'right' in controls and controls['right']
+    
     return [
-        controls['forward'] and 1 or 0,
-        controls['backward'] and 1 or 0,
-        controls['left'] and 1 or 0,
-        controls['right'] and 1 or 0,
-        controls['forward+left'] and 1 or 0,
-        controls['forward+right'] and 1 or 0,
+        forward and 1 or 0, # forward
+        backward and 1 or 0, # backward
+        left and 1 or 0, # left
+        left and 1 or 0, # right
+        (forward and left) and 1 or 0, # forward+left
+        (forward and right) and 1 or 0, # backward+right
     ]
 
 def get_xy():
@@ -108,7 +111,7 @@ def get_model():
     return inception_v3(
         height,
         width,
-        6, # the number of outputs; see the convert_controls_to_array() method on how many outputs you have
+        len(convert_controls_to_array({})),
         tensorboard_dir=network_logs_dir
     )
 
