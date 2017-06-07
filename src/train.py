@@ -20,6 +20,7 @@ if __name__ == "__main__":
     epochs = get_epochs()
 
     print('Start at {0}'.format(now))
+    print('=' * 32)
     sys.stdout.flush()
 
     for i in range(epochs):

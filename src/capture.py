@@ -80,6 +80,7 @@ if __name__ == "__main__":
     prepare_folders_and_files()
 
     print('Start at {0}'.format(now))
+    print('=' * 32)
     sys.stdout.flush()
 
     while True:

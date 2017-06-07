@@ -15,6 +15,7 @@ if __name__ == "__main__":
     last_time = time.time()
 
     print('Start at {0}'.format(now))
+    print('=' * 32)
     sys.stdout.flush()
 
     while True:

@@ -22,9 +22,21 @@ args = get_args()
 activity = args['activity']
 mode = args['mode']
 network_dir = os.path.join(data_dir, activity, 'network', mode)
-network_checkpoint_path = os.path.join(network_dir, 'checkpoint')
 network_logs_dir = os.path.join(network_dir, 'logs')
-network_model_path = os.path.join(network_dir, 'model')
+network_checkpoint_path = os.path.join(network_dir, 'checkpoint.tflearn')
+network_model_path = os.path.join(network_dir, 'model.tflearn')
+
+controls_map = {
+    'forward': [1, 0, 0, 0, 0, 0, 0, 0, 0],
+    'backward': [0, 1, 0, 0, 0, 0, 0, 0, 0],
+    'left': [0, 0, 1, 0, 0, 0, 0, 0, 0],
+    'right': [0, 0, 0, 1, 0, 0, 0, 0, 0],
+    'forward+left': [0, 0, 0, 0, 1, 0, 0, 0, 0],
+    'forward+right': [0, 0, 0, 0, 0, 1, 0, 0, 0],
+    'backward+left': [0, 0, 0, 0, 0, 0, 1, 0, 0],
+    'backward+right': [0, 0, 0, 0, 0, 0, 0, 1, 0],
+    'none': [0, 0, 0, 0, 0, 0, 0, 0, 0],
+}
 
 # Methods
 
@@ -38,11 +50,11 @@ def get_toggle_capture_hotkeys():
 
 
 def get_epochs():
-    return 256
+    return 64
 
 
 def get_xy_batch_size():
-    return 1024
+    return 512
 
 
 def get_device(action='train'):
@@ -85,19 +97,35 @@ def get_controls_from_inputs(inputs):
 
 
 def convert_controls_to_array(controls):
-    forward = 'forward' in controls and controls['forward']
-    backward = 'backward' in controls and controls['backward']
+    output = controls_map['none']
+
     left = 'left' in controls and controls['left']
     right = 'right' in controls and controls['right']
+    forward = 'forward' in controls and controls['forward']
+    backward = 'backward' in controls and controls['backward']
+    forwardLeft = (forward and left)
+    forwardRight = (forward and right)
+    backwardLeft = (backward and left)
+    backwardRight = (backward and right)
+    
+    if forwardLeft:
+        output = controls_map['forward+left']
+    elif forwardRight:
+        output = controls_map['forward+right']
+    elif backwardLeft:
+        output = controls_map['backward+left']
+    elif backwardRight:
+        output = controls_map['backward+right']
+    elif forward:
+        output = controls_map['forward']
+    elif backward:
+        output = controls_map['backward']
+    elif left:
+        output = controls_map['left']
+    elif right:
+        output = controls_map['right']
 
-    return [
-        forward and 1 or 0,  # forward
-        backward and 1 or 0,  # backward
-        left and 1 or 0,  # left
-        left and 1 or 0,  # right
-        (forward and left) and 1 or 0,  # forward+left
-        (forward and right) and 1 or 0,  # backward+right
-    ]
+    return output
 
 
 def get_xy():
@@ -155,6 +183,7 @@ def get_model(load_existing=False):
 
 
 def save_model(model):
+    # TODO: make backups/archives?
     model.save(network_model_path)
 
 
@@ -164,25 +193,30 @@ def get_prediction(model, X):
     prediction = prediction[0]
     sys.stdout.flush()
 
-    index = np.argmax(prediction)
+    max_index = np.argmax(prediction)
 
-    # TODO: make it nicer ...
-    if index == 0:
+    # View controls_map dict to see, which output corresponds to which action
+    # TODO: shorter version of it?
+    if max_index == 0:
         action = 'forward'
-    elif index == 1:
+    elif max_index == 1:
         action = 'backward'
-    elif index == 2:
+    elif max_index == 2:
         action = 'left'
-    elif index == 3:
+    elif max_index == 3:
         action = 'right'
-    elif index == 4:
+    elif max_index == 4:
         action = 'forward+left'
-    elif index == 5:
+    elif max_index == 5:
         action = 'forward+right'
+    elif max_index == 6:
+        action = 'backward+left'
+    elif max_index == 7:
+        action = 'backward+right'
 
     return {
         'action': action,
-        'action_confidence': prediction[index],
+        'action_confidence': prediction[max_index],
         'raw': prediction,
     }
 
