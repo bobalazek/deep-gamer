@@ -50,7 +50,7 @@ def get_toggle_capture_hotkeys():
 
 
 def get_epochs():
-    return 64
+    return 128
 
 
 def get_xy_batch_size():
