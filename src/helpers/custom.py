@@ -36,9 +36,6 @@ def get_epochs():
 def get_xy_batch_size():
     return 1024
 
-def get_xy_shuffle():
-    return True
-
 def get_device(action='train'):
     return '/cpu:0'
 
@@ -93,7 +90,6 @@ def get_xy():
     X = []
     Y = []
     batch_size = get_xy_batch_size()
-    should_shuffle = get_xy_shuffle()
 
     processed_dir = os.path.join(data_dir, activity, 'processed', mode)
     processed_data_file_path = os.path.join(processed_dir, 'data.txt')
@@ -101,8 +97,7 @@ def get_xy():
     processed_data = processed_data_file.split("\n")
     processed_data = [x for x in processed_data if x != ''] # TODO: find a quicker solution? filter()?
 
-    if should_shuffle:
-        random.shuffle(processed_data)
+    random.shuffle(processed_data)
 
     rows = 1
     for row in processed_data:
