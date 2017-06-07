@@ -23,32 +23,25 @@ network_logs_dir = os.path.join(network_dir, 'logs')
 network_model_path = os.path.join(network_dir, 'model')
 
 # Methods
-# MUST return a tuple
 def get_processed_image_size():
     return (640, 480)
 
-# MUST return an array
 # View the full list inside src/capture/keyboard.py
 def get_toggle_capture_hotkeys():
     return ['left_control', 'F11']
 
-# MUST return an integer
 def get_epochs():
     return 256
 
-# MUST return an integer
 def get_xy_batch_size():
     return 1024
 
-# MUST return a boolean
 def get_xy_shuffle():
     return True
 
-# MUST return a string
-def get_device(type='train'):
+def get_device(action='train'):
     return '/cpu:0'
 
-# MUST return an float
 def get_validation_set_percentage():
     return 0.1
 
@@ -62,7 +55,6 @@ def preprocess_image(image):
 
     return image_array
 
-# MUST return a dictionary
 def get_image_processing_data_row(processed_image_path, inputs):
     return {
         'image_path': processed_image_path,

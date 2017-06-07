@@ -5,14 +5,15 @@ from helpers.custom import *
 
 # Preparation
 now = datetime.datetime.now()
+args = get_args()
 
 # Main 
 if __name__ == "__main__":
     print('Loading model ...')
     sys.stdout.flush()
 
-    with tf.device(get_device('train')):
-        model = get_model()
+    with tf.device(get_device(action='train')):
+        model = get_model(load_existing=args['load_existing'])
 
     model_run_id = get_model_run_id()
     epochs = get_epochs()

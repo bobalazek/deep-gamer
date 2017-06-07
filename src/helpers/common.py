@@ -19,6 +19,12 @@ def prepare_args():
         help='Which mode should we use when processing/evaluating the raw data? Usefull when processing/evaluating/testing multiple results with the same raw data.',
         default='default'
     )
+    parser.add_argument(
+        '-e',
+        '--load-existing',
+        help='When we train our model, should we contiue to train on an existing one?',
+        action='store_true'
+    )
 
     return parser.parse_args()
 
@@ -28,6 +34,7 @@ def get_args():
     return {
         'activity': args.activity,
         'mode': args.mode,
+        'load_existing': args.load_existing,
     }
 
 def grab_image(file_path=False, file_format='PNG', **options):
