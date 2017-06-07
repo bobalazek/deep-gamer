@@ -35,7 +35,7 @@ controls_map = {
     'forward+right': [0, 0, 0, 0, 0, 1, 0, 0, 0],
     'backward+left': [0, 0, 0, 0, 0, 0, 1, 0, 0],
     'backward+right': [0, 0, 0, 0, 0, 0, 0, 1, 0],
-    'none': [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    'none': [0, 0, 0, 0, 0, 0, 0, 0, 1],
 }
 
 # Methods
@@ -189,30 +189,17 @@ def save_model(model):
 
 def get_prediction(model, X):
     action = None
+
     prediction = model.predict([X])
     prediction = prediction[0]
-    sys.stdout.flush()
 
     max_index = np.argmax(prediction)
 
     # View controls_map dict to see, which output corresponds to which action
-    # TODO: shorter version of it?
-    if max_index == 0:
-        action = 'forward'
-    elif max_index == 1:
-        action = 'backward'
-    elif max_index == 2:
-        action = 'left'
-    elif max_index == 3:
-        action = 'right'
-    elif max_index == 4:
-        action = 'forward+left'
-    elif max_index == 5:
-        action = 'forward+right'
-    elif max_index == 6:
-        action = 'backward+left'
-    elif max_index == 7:
-        action = 'backward+right'
+    for control, output in controls_map:
+        control_max_index = np.argmax(output)
+        if max_index == control_max_index:
+            action = control
 
     return {
         'action': action,
