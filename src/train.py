@@ -1,4 +1,5 @@
-import sys, datetime
+import sys
+import datetime
 import tensorflow as tf
 from helpers.common import *
 from helpers.custom import *
@@ -7,7 +8,7 @@ from helpers.custom import *
 now = datetime.datetime.now()
 args = get_args()
 
-# Main 
+# Main
 if __name__ == "__main__":
     print('Loading model ...')
     sys.stdout.flush()

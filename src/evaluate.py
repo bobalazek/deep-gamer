@@ -1,4 +1,6 @@
-import sys, os, time
+import sys
+import os
+import time
 import tensorflow as tf
 from helpers.common import *
 from helpers.custom import *
@@ -24,7 +26,8 @@ if __name__ == "__main__":
             print('Prediction: {0}.'.format(prediction))
             sys.stdout.flush()
 
-        print('Last execution took {0} seconds.'.format(time.time() - last_time))
+        print('Last execution took {0} seconds.'.format(
+            time.time() - last_time))
         sys.stdout.flush()
 
         last_time = time.time()

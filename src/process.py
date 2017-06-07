@@ -1,4 +1,9 @@
-import sys, os, json, glob, time, datetime
+import sys
+import os
+import json
+import glob
+import time
+import datetime
 from helpers.common import *
 from helpers.image import *
 
@@ -11,10 +16,14 @@ activity = args['activity']
 mode = args['mode']
 activity_raw_dir = os.path.join(data_dir, activity, 'raw')
 processed_dir = os.path.join(data_dir, activity, 'processed', mode)
-processed_images_file_path = os.path.join(processed_dir, 'processed_images.txt') # Saves all the processed images
-processed_data_file_path = os.path.join(processed_dir, 'data.txt') # Saves the final processed data, such as: left, right, forward, backward, ... means, ONLY the core data (as opposed to all the raw data we get while capturing)
-    
+processed_images_file_path = os.path.join(
+    processed_dir, 'processed_images.txt')  # Saves all the processed images
+# Saves the final processed data, such as: left, right, forward, backward, ... means, ONLY the core data (as opposed to all the raw data we get while capturing)
+processed_data_file_path = os.path.join(processed_dir, 'data.txt')
+
 # Functions
+
+
 def prepare_folders_and_files():
     if not os.path.exists(processed_dir):
         os.makedirs(processed_dir)
@@ -25,12 +34,14 @@ def prepare_folders_and_files():
     if not os.path.exists(processed_data_file_path):
         processed_images_file = open(processed_data_file_path, 'w+').read()
 
+
 def get_processed_images():
     processed_images_file = open(processed_images_file_path, 'r+').read()
     processed_images = processed_images_file.split("\n")
-    processed_images = [x for x in processed_images if x != ''] # TODO: find a quicker solution? filter()?
-    
+    processed_data = list(filter(None, processed_images))
+
     return processed_images
+
 
 def get_activity_raw_session_dirs():
     activity_raw_session_dirs = [
@@ -40,21 +51,25 @@ def get_activity_raw_session_dirs():
     if len(activity_raw_session_dirs) is 0:
         sys.exit('Exiting. Did not found any sessions for this activity')
 
-    activity_raw_session_dirs.pop(0) # Remove first object, as it's the directory itself
+    # Remove first object, as it's the directory itself
+    activity_raw_session_dirs.pop(0)
 
     return activity_raw_session_dirs
 
+
 def get_session_directory_images(session_directory_log_file_path):
-    session_directory_log_file = open(session_directory_log_file_path, 'r+').read()
+    session_directory_log_file = open(
+        session_directory_log_file_path, 'r+').read()
     session_directory_images = session_directory_log_file.split("\n")
-    session_directory_images = [x for x in session_directory_images if x != ''] # TODO: find a quicker solution? filter()?
+    session_directory_images = list(filter(None, session_directory_images))
 
     return session_directory_images
+
 
 def do_image_processing(image_data):
     image_path = image_data['image']['path']
 
-    print('Processing image {0}'.format(image_path))
+    print('Processing image {0} ...'.format(image_path))
     sys.stdout.flush()
 
     image_name = os.path.basename(image_path)
@@ -74,8 +89,9 @@ def do_image_processing(image_data):
             )
         ) + "\n")
 
+
 def do_session_directory_processing(session_directory, session_directory_images):
-    print('Processing images from directory {0}'.format(session_directory))
+    print('Processing images from directory {0} ...'.format(session_directory))
     sys.stdout.flush()
 
     for image_raw_data in session_directory_images:
@@ -84,14 +100,12 @@ def do_session_directory_processing(session_directory, session_directory_images)
 
         if image_path not in processed_images:
             do_image_processing(image_data)
-        else:
-            print('The image {0} was already processed'.format(image_path))
-            sys.stdout.flush()
 
-    print('Images from directory {0} were processed'.format(session_directory))
+    print('Images from directory {0} were all successfully processed.'.format(session_directory))
     print('-' * 32)
     sys.stdout.flush()
-    
+
+
 # Main
 if __name__ == "__main__":
     last_time = time.time()
@@ -122,29 +136,38 @@ if __name__ == "__main__":
     sys.stdout.flush()
 
     # Start processing per directory
-    print('Starting processing sessions directories ...')
+    print('Starting to process session directories ...')
+    print('=' * 32)
+    print('=' * 32)
     print('=' * 32)
     sys.stdout.flush()
 
     for session_directory in activity_raw_session_dirs:
-        session_directory_log_file_path = os.path.join(session_directory, 'log.txt')
+        session_directory_log_file_path = os.path.join(
+            session_directory, 'log.txt')
 
         # Jump out, as we did not find any data in this session
         if not os.path.exists(session_directory_log_file_path):
-            print('Did not found any log file in {0}'.format(session_directory))
+            print('Skip directory. Did not found any log file in {0}'.format(
+                session_directory))
+            print('=' * 32)
             sys.stdout.flush()
 
             continue
 
-        session_directory_images = get_session_directory_images(session_directory_log_file_path)
+        session_directory_images = get_session_directory_images(
+            session_directory_log_file_path)
 
         print('Processing directory {0}'.format(session_directory))
         print('Found {0} images'.format(len(session_directory_images)))
         sys.stdout.flush()
 
         if len(session_directory_images) > 0:
-            do_session_directory_processing(session_directory, session_directory_images)
+            do_session_directory_processing(
+                session_directory, session_directory_images)
 
-        print('Directory {0} processed'.format(session_directory))
+        print('Directory {0} was successfully processed.'.format(session_directory))
         print('=' * 32)
         sys.stdout.flush()
+
+    print('Session directories were all successfully processed.')

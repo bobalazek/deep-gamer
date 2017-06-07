@@ -13,22 +13,23 @@ gamepad = {
         'right_bumper': False,
     },
     'axes': {
-        'left_trigger': 0, # 0 <> 1
-        'right_trigger': 0, # 0 <> 1
+        'left_trigger': 0,  # 0 <> 1
+        'right_trigger': 0,  # 0 <> 1
         'left': {
-            'x': 0, # -1 <> 1
-            'y': 0, # -1 <> 1
+            'x': 0,  # -1 <> 1
+            'y': 0,  # -1 <> 1
         },
         'right': {
-            'x': 0, # -1 <> 1
-            'y': 0, # -1 <> 1
+            'x': 0,  # -1 <> 1
+            'y': 0,  # -1 <> 1
         },
         'd_pad': {
-            'x': 0, # -1 <> 1
-            'y': 0, # -1 <> 1
+            'x': 0,  # -1 <> 1
+            'y': 0,  # -1 <> 1
         },
     },
 }
+
 
 def get_pressed_gamepad_buttons_and_axes():
     try:
@@ -57,17 +58,23 @@ def get_pressed_gamepad_buttons_and_axes():
             elif code == 'BTN_TR':
                 gamepad['buttons']['right_bumper'] = state == 1
             elif code == 'ABS_Z':
-                gamepad['axes']['left_trigger'] = state != 0 and (state / 255) or 0
+                gamepad['axes']['left_trigger'] = state != 0 and (
+                    state / 255) or 0
             elif code == 'ABS_RZ':
-                gamepad['axes']['right_trigger'] = state != 0 and (state / 255) or 0
+                gamepad['axes']['right_trigger'] = state != 0 and (
+                    state / 255) or 0
             elif code == 'ABS_X':
-                gamepad['axes']['left']['x'] = state != 0 and (state / 32768) or 0
+                gamepad['axes']['left']['x'] = state != 0 and (
+                    state / 32768) or 0
             elif code == 'ABS_Y':
-                gamepad['axes']['left']['y'] = state != 0 and (state / 32768) or 0
+                gamepad['axes']['left']['y'] = state != 0 and (
+                    state / 32768) or 0
             elif code == 'ABS_RX':
-                gamepad['axes']['right']['x'] = state != 0 and (state / 32768) or 0
+                gamepad['axes']['right']['x'] = state != 0 and (
+                    state / 32768) or 0
             elif code == 'ABS_RY':
-                gamepad['axes']['right']['y'] = state != 0 and (state / 32768) or 0
+                gamepad['axes']['right']['y'] = state != 0 and (
+                    state / 32768) or 0
             elif code == 'ABS_HAT0X':
                 gamepad['axes']['d_pad']['x'] = state
             elif code == 'ABS_HAT0Y':

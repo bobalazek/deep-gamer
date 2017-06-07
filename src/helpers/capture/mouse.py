@@ -1,5 +1,6 @@
 import win32api
 
+
 def get_mouse_position_and_buttons():
     return {
         'position': win32api.GetCursorPos(),

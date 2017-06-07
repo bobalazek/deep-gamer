@@ -1,4 +1,8 @@
-import sys, os, time, datetime, json
+import sys
+import os
+import time
+import datetime
+import json
 from helpers.common import *
 from helpers.custom import *
 from helpers.capture.keyboard import get_pressed_keyboard_keys, check_for_capturing_hotkeys
@@ -6,8 +10,8 @@ from helpers.capture.gamepad import get_pressed_gamepad_buttons_and_axes
 from helpers.capture.mouse import get_mouse_position_and_buttons
 
 # Preparation
-is_capturing = False # If we should be capturing
-inputs = None # Saves the current input on every tick
+is_capturing = False  # If we should be capturing
+inputs = None  # Saves the current input on every tick
 toggle_capture_hotkeys = get_toggle_capture_hotkeys()
 now = datetime.datetime.now()
 data_dir = get_data_dir()
@@ -17,9 +21,12 @@ session_id = now.strftime('%Y-%m-%d_%H%M%S')
 session_dir = os.path.join(data_dir, args['activity'], 'raw', session_id)
 
 # Functions
+
+
 def prepare_folders_and_files():
     if not os.path.exists(session_dir):
         os.makedirs(session_dir)
+
 
 def capture_image(timestamp):
     filename = timestamp.replace(':', '') + '.jpg'
@@ -30,12 +37,14 @@ def capture_image(timestamp):
 
     return filename, filepath
 
-def capture_inputs():    
+
+def capture_inputs():
     return {
         'keyboard': get_pressed_keyboard_keys(),
         'mouse': get_mouse_position_and_buttons(),
         'gamepad': get_pressed_gamepad_buttons_and_axes(),
     }
+
 
 def capture():
     global inputs, is_capturing
@@ -62,6 +71,7 @@ def capture():
 
     return is_capturing
 
+
 # Main
 if __name__ == "__main__":
     last_time = time.time()
@@ -76,7 +86,8 @@ if __name__ == "__main__":
         inputs = capture_inputs()
 
         if capture():
-            print('Last execution took {0} seconds.'.format(time.time() - last_time))
+            print('Last execution took {0} seconds.'.format(
+                time.time() - last_time))
             print('Controls: {0}'.format(get_controls_from_inputs(inputs)))
             sys.stdout.flush()
 

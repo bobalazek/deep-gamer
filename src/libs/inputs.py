@@ -84,7 +84,7 @@ OLD = sys.version_info < (3, 4)
 def chunks(raw):
     """Yield successive 24-sized chunks from raw."""
     for i in range(0, len(raw), 24):
-        yield struct.unpack(EVENT_FORMAT, raw[i:i+24])
+        yield struct.unpack(EVENT_FORMAT, raw[i:i + 24])
 
 
 def iter_unpack(raw):
@@ -93,6 +93,7 @@ def iter_unpack(raw):
         return chunks(raw)
     else:
         return struct.iter_unpack(EVENT_FORMAT, raw)
+
 
 # long, long, unsigned short, unsigned short, int
 EVENT_FORMAT = str('llHHi')
@@ -164,7 +165,7 @@ EVENT_TYPES = (
     (0x16, "Power"),
     (0x17, "ForceFeedbackStatus"),
     (0x1f, "Max"),
-    (0x1f+1, "Current"))
+    (0x1f + 1, "Current"))
 
 SYNCHRONIZATION_EVENTS = (
     (0, "SYN_REPORT"),
@@ -172,7 +173,7 @@ SYNCHRONIZATION_EVENTS = (
     (2, "SYN_MT_REPORT"),
     (3, "SYN_DROPPED"),
     (0xf, "SYN_MAX"),
-    (0xf+1, "SYN_CNT"))
+    (0xf + 1, "SYN_CNT"))
 
 KEYS_AND_BUTTONS = (
     (0, "KEY_RESERVED"),
@@ -706,7 +707,7 @@ KEYS_AND_BUTTONS = (
     (0x2e6, "BTN_TRIGGER_HAPPY39"),
     (0x2e7, "BTN_TRIGGER_HAPPY40"),
     (0x2ff, "KEY_MAX"),
-    (0x2ff+1, "KEY_CNT"))
+    (0x2ff + 1, "KEY_CNT"))
 
 RELATIVE_AXES = (
     (0x00, "REL_X"),
@@ -720,7 +721,7 @@ RELATIVE_AXES = (
     (0x08, "REL_WHEEL"),
     (0x09, "REL_MISC"),
     (0x0f, "REL_MAX"),
-    (0x0f+1, "REL_CNT"))
+    (0x0f + 1, "REL_CNT"))
 
 ABSOLUTE_AXES = (
     (0x00, "ABS_X"),
@@ -765,7 +766,7 @@ ABSOLUTE_AXES = (
     (0x3c, "ABS_MT_TOOL_X"),  # Center X tool position
     (0x3d, "ABS_MT_TOOL_Y"),  # Center Y tool position
     (0x3f, "ABS_MAX"),
-    (0x3f+1, "ABS_CNT"))
+    (0x3f + 1, "ABS_CNT"))
 
 SWITCH_EVENTS = (
     (0x00, "SW_LID"),  # set = lid shut
@@ -784,7 +785,7 @@ SWITCH_EVENTS = (
     (0x0d, "SW_LINEIN_INSERT"),  # set = inserted
     (0x0e, "SW_MUTE_DEVICE"),  # set = device disabled
     (0x0f, "SW_MAX"),
-    (0x0f+1, "SW_CNT"))
+    (0x0f + 1, "SW_CNT"))
 
 MISC_EVENTS = (
     (0x00, "MSC_SERIAL"),
@@ -794,7 +795,7 @@ MISC_EVENTS = (
     (0x04, "MSC_SCAN"),
     (0x05, "MSC_TIMESTAMP"),
     (0x07, "MSC_MAX"),
-    (0x07+1, "MSC_CNT"))
+    (0x07 + 1, "MSC_CNT"))
 
 LEDS = (
     (0x00, "LED_NUML"),
@@ -809,20 +810,20 @@ LEDS = (
     (0x09, "LED_MAIL"),
     (0x0a, "LED_CHARGING"),
     (0x0f, "LED_MAX"),
-    (0x0f+1, "LED_CNT"))
+    (0x0f + 1, "LED_CNT"))
 
 AUTOREPEAT_VALUES = (
     (0x00, "REP_DELAY"),
     (0x01, "REP_PERIOD"),
     (0x01, "REP_MAX"),
-    (0x01+1, "REP_CNT"))
+    (0x01 + 1, "REP_CNT"))
 
 SOUNDS = (
     (0x00, "SND_CLICK"),
     (0x01, "SND_BELL"),
     (0x02, "SND_TONE"),
     (0x07, "SND_MAX"),
-    (0x07+1, "SND_CNT"))
+    (0x07 + 1, "SND_CNT"))
 
 WIN_KEYBOARD_CODES = {
     0x0100: 1,
@@ -1372,6 +1373,7 @@ class NoDataError(RuntimeError):
 class InputEvent(object):
     """A user event."""
     # pylint: disable=too-few-public-methods
+
     def __init__(self,
                  device,
                  event_info):
@@ -1545,6 +1547,7 @@ class WindowsKeyboardListener(BaseListener):
     """Loosely emulate Evdev keyboard behaviour on Windows.  Listen (hook
     in Windows terminology) for key events then buffer them in a pipe.
     """
+
     def __init__(self, pipe):
         self.pipe = pipe
         self.hooked = None
@@ -1620,6 +1623,7 @@ class WindowsMouseListener(BaseListener):
     """Loosely emulate Evdev mouse behaviour on Windows.  Listen (hook
     in Windows terminology) for key events then buffer them in a pipe.
     """
+
     def __init__(self, pipe):
         self.pipe = pipe
         self.hooked = None
@@ -1784,6 +1788,7 @@ def mac_mouse_process(pipe):
 
     class MacMouseSetup(NSObject):
         """Setup the handler."""
+
         def init_with_handler(self, handler):
             """
             Init method that receives the write end of the pipe.
@@ -1815,6 +1820,7 @@ def mac_mouse_process(pipe):
         """Loosely emulate Evdev mouse behaviour on the Macs.
         Listen for key events then buffer them in a pipe.
         """
+
         def __init__(self, pipe):
             super(MacMouseListener, self).__init__(pipe)
             self.codes = dict(MAC_EVENT_CODES)
@@ -1920,6 +1926,7 @@ def mac_keyboard_process(pipe):
 
     class MacKeyboardSetup(NSObject):
         """Setup the handler."""
+
         def init_with_handler(self, handler):
             """
             Init method that receives the write end of the pipe.
@@ -1946,6 +1953,7 @@ def mac_keyboard_process(pipe):
         """Loosely emulate Evdev keyboard behaviour on the Mac.
         Listen for key events then buffer them in a pipe.
         """
+
         def __init__(self, pipe):
             super(MacKeyboardListener, self).__init__(pipe)
             self.codes = dict(MAC_EVENT_CODES)
@@ -2003,6 +2011,7 @@ def mac_keyboard_process(pipe):
 class InputDevice(object):
     """A user input device."""
     # pylint: disable=too-many-instance-attributes
+
     def __init__(self, manager, device_path,
                  char_path_override=None,
                  read_size=1):
@@ -2183,6 +2192,7 @@ class Mouse(InputDevice):
 
 class GamePad(InputDevice):
     """A gamepad or other joystick-like device."""
+
     def __init__(self, manager, device_path,
                  char_path_override=None):
         super(GamePad, self).__init__(manager,

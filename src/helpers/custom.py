@@ -1,4 +1,8 @@
-import sys, os, datetime, json, random
+import sys
+import os
+import datetime
+import json
+import random
 import numpy as np
 import cv2
 from PIL import Image
@@ -23,26 +27,32 @@ network_logs_dir = os.path.join(network_dir, 'logs')
 network_model_path = os.path.join(network_dir, 'model')
 
 # Methods
+
+
 def get_processed_image_size():
     return (640, 480)
 
-# View the full list inside src/capture/keyboard.py
+
 def get_toggle_capture_hotkeys():
-    return ['left_control', 'F11']
+    return ['left_control', 'F11'] # View the full list inside src/capture/keyboard.py
+
 
 def get_epochs():
     return 256
 
+
 def get_xy_batch_size():
     return 1024
+
 
 def get_device(action='train'):
     return '/cpu:0'
 
+
 def get_validation_set_percentage():
     return 0.1
 
-# MUST return a np.array()
+
 def preprocess_image(image):
     image = image.resize(get_processed_image_size(), Image.ANTIALIAS)
 
@@ -50,7 +60,8 @@ def preprocess_image(image):
 
     image_array = cv2.cvtColor(image_array, cv2.COLOR_BGR2RGB)
 
-    return image_array
+    return image_array # MUST return a np.array()
+
 
 def get_image_processing_data_row(processed_image_path, inputs):
     return {
@@ -58,12 +69,13 @@ def get_image_processing_data_row(processed_image_path, inputs):
         'controls': get_controls_from_inputs(inputs),
     }
 
+
 def get_controls_from_inputs(inputs):
     forward = inputs['keyboard']['w'] or inputs['gamepad']['axes']['right_trigger'] > 0
     backward = inputs['keyboard']['s'] or inputs['gamepad']['axes']['left_trigger'] > 0
-    left = inputs['keyboard']['a'] or  inputs['gamepad']['axes']['left']['x'] < 0
+    left = inputs['keyboard']['a'] or inputs['gamepad']['axes']['left']['x'] < 0
     right = inputs['keyboard']['d'] or inputs['gamepad']['axes']['left']['x'] > 0
-    
+
     return {
         'forward': forward,
         'backward': backward,
@@ -71,20 +83,22 @@ def get_controls_from_inputs(inputs):
         'right': right,
     }
 
+
 def convert_controls_to_array(controls):
     forward = 'forward' in controls and controls['forward']
     backward = 'backward' in controls and controls['backward']
     left = 'left' in controls and controls['left']
     right = 'right' in controls and controls['right']
-    
+
     return [
-        forward and 1 or 0, # forward
-        backward and 1 or 0, # backward
-        left and 1 or 0, # left
-        left and 1 or 0, # right
-        (forward and left) and 1 or 0, # forward+left
-        (forward and right) and 1 or 0, # backward+right
+        forward and 1 or 0,  # forward
+        backward and 1 or 0,  # backward
+        left and 1 or 0,  # left
+        left and 1 or 0,  # right
+        (forward and left) and 1 or 0,  # forward+left
+        (forward and right) and 1 or 0,  # backward+right
     ]
+
 
 def get_xy():
     X = []
@@ -95,13 +109,14 @@ def get_xy():
     processed_data_file_path = os.path.join(processed_dir, 'data.txt')
     processed_data_file = open(processed_data_file_path, 'r+').read()
     processed_data = processed_data_file.split("\n")
-    processed_data = [x for x in processed_data if x != ''] # TODO: find a quicker solution? filter()?
+    processed_data = list(filter(None, processed_data))
 
     random.shuffle(processed_data)
 
     rows = 1
     for row in processed_data:
-        row_data = json.loads(row) # that returns the same results as defined in the get_image_processing_data_row()
+        # that returns the same results as defined in the get_image_processing_data_row()
+        row_data = json.loads(row)
 
         X.append(np.array(Image.open(row_data['image_path'])))
         Y.append(convert_controls_to_array(row_data['controls']))
@@ -113,8 +128,9 @@ def get_xy():
 
     return X, Y
 
+
 def get_model(load_existing=False):
-    # Prepare dirs 
+    # Prepare dirs
     if not os.path.exists(network_logs_dir):
         os.makedirs(network_logs_dir)
 
@@ -137,8 +153,10 @@ def get_model(load_existing=False):
 
     return model
 
+
 def save_model(model):
     model.save(network_model_path)
+
 
 def get_prediction(model, X):
     action = None
@@ -167,6 +185,7 @@ def get_prediction(model, X):
         'action_confidence': prediction[index],
         'raw': prediction,
     }
+
 
 def get_model_run_id():
     return now.strftime('%Y%m%d_%H%M%S') + '_' + '{0}_{1}'.format(activity, mode)

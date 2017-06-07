@@ -4,6 +4,7 @@ import argparse
 import numpy as np
 from PIL import Image, ImageGrab
 
+
 def prepare_args():
     parser = argparse.ArgumentParser(description='Deep Gamer')
 
@@ -28,6 +29,7 @@ def prepare_args():
 
     return parser.parse_args()
 
+
 def get_args():
     args = prepare_args()
 
@@ -37,6 +39,7 @@ def get_args():
         'load_existing': args.load_existing,
     }
 
+
 def grab_image(file_path=False, file_format='PNG', **options):
     image = ImageGrab.grab()
 
@@ -44,6 +47,7 @@ def grab_image(file_path=False, file_format='PNG', **options):
         image.save(file_path, file_format, **options)
 
     return image
+
 
 def get_data_dir():
     return os.path.abspath(
@@ -55,11 +59,12 @@ def get_data_dir():
         )
     )
 
+
 def show_preview_window(images_array):
     final_images_array = []
 
     for image in images_array:
-        mode = None # https://stackoverflow.com/questions/32192671/pil-image-mode-i-is-grayscale
+        mode = None  # https://stackoverflow.com/questions/32192671/pil-image-mode-i-is-grayscale
 
         # TODO: also add other modes
         if image.mode is 'L':
