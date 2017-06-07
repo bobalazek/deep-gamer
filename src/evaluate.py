@@ -11,7 +11,7 @@ if __name__ == "__main__":
     print('Loading model ...')
     sys.stdout.flush()
 
-    model = get_model(load_existing=True)
+    model = get_model()
     last_time = time.time()
 
     print('Start at {0}'.format(now))

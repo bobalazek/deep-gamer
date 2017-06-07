@@ -14,7 +14,7 @@ if __name__ == "__main__":
     sys.stdout.flush()
 
     with tf.device(get_device(action='train')):
-        model = get_model(load_existing=args['load_existing'])
+        model = get_model(force_new_model=args['force_new_model'])
 
     model_run_id = get_model_run_id()
     epochs = get_epochs()

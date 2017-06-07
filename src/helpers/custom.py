@@ -157,7 +157,7 @@ def get_xy():
     return X, Y
 
 
-def get_model(load_existing=False):
+def get_model(load_existing=True, force_new_model=False):
     # Prepare dirs
     if not os.path.exists(network_logs_dir):
         os.makedirs(network_logs_dir)
@@ -176,7 +176,7 @@ def get_model(load_existing=False):
         best_checkpoint_path=network_checkpoint_path
     )
 
-    if load_existing:
+    if load_existing and not force_new_model:
         model.load(network_model_path)
 
     return model

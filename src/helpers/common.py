@@ -21,9 +21,9 @@ def prepare_args():
         default='default'
     )
     parser.add_argument(
-        '-e',
-        '--load-existing',
-        help='When we train our model, should we contiue to train on an existing one?',
+        '-n',
+        '--force-new-model',
+        help='Should we force a new model to be trained?',
         action='store_true'
     )
 
@@ -36,7 +36,7 @@ def get_args():
     return {
         'activity': args.activity,
         'mode': args.mode,
-        'load_existing': args.load_existing,
+        'force_new_model': args.force_new_model,
     }
 
 
