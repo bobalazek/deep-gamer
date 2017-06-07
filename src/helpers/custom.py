@@ -150,7 +150,7 @@ def get_prediction(model, X):
     prediction = model.predict([X])
     prediction = prediction[0]
     sys.stdout.flush()
-    
+
     index = np.argmax(prediction)
 
     # TODO: make it nicer ...
