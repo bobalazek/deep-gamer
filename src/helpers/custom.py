@@ -151,7 +151,7 @@ def get_xy(iteration=0, shuffle=False):
                                                  total_size=len(processed_data))
     processed_data = processed_data[from_index:to_index]
 
-    for row_index in processed_data:
+    for row in processed_data:
         # that returns the same results as defined in the get_image_processing_data_row()
         row_data = json.loads(row)
 
