@@ -41,6 +41,10 @@ controls_map = {
 # Methods
 
 
+def get_device(action='train'):
+    return '/cpu:0'
+
+
 def get_processed_image_size():
     return (640, 480)
 
@@ -49,16 +53,16 @@ def get_toggle_capture_hotkeys():
     return ['left_control', 'F11'] # View the full list inside src/capture/keyboard.py
 
 
-def get_epochs():
+def get_train_iterations():
     return 128
 
 
-def get_xy_batch_size():
-    return 512
+def get_train_batch_size():
+    return 256
 
 
-def get_device(action='train'):
-    return '/cpu:0'
+def get_train_epochs():
+    return 1
 
 
 def get_validation_set_percentage():
@@ -128,10 +132,10 @@ def convert_controls_to_array(controls):
     return output
 
 
-def get_xy():
+def get_xy(iteration=0, shuffle=False):
     X = []
     Y = []
-    batch_size = get_xy_batch_size()
+    batch_size = get_train_batch_size()
 
     processed_dir = os.path.join(data_dir, activity, 'processed', mode)
     processed_data_file_path = os.path.join(processed_dir, 'data.txt')
@@ -139,20 +143,20 @@ def get_xy():
     processed_data = processed_data_file.split("\n")
     processed_data = list(filter(None, processed_data))
 
-    random.shuffle(processed_data)
+    if shuffle:
+        random.shuffle(processed_data)
 
-    rows = 1
-    for row in processed_data:
+    from_index, to_index = get_from_and_to_index(iteration=iteration,
+                                                 batch_size=batch_size,
+                                                 total_size=len(processed_data))
+    processed_data = processed_data[from_index:to_index]
+
+    for row_index in processed_data:
         # that returns the same results as defined in the get_image_processing_data_row()
         row_data = json.loads(row)
 
         X.append(np.array(Image.open(row_data['image_path'])))
         Y.append(convert_controls_to_array(row_data['controls']))
-
-        rows += 1
-
-        if rows > batch_size:
-            break
 
     return X, Y
 

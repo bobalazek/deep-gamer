@@ -93,3 +93,19 @@ def show_preview_window(images_array):
         return False
 
     return True
+
+def get_from_and_to_index(iteration, batch_size, total_size):
+    from_index = iteration * batch_size
+    to_index = from_index + batch_size
+    modulo = to_index % total_size
+
+    # TODO: figure out the real formula
+    if to_index > total_size:
+        to_index = modulo
+        from_index = to_index - batch_size
+        
+        if from_index < 0:
+            from_index = 0
+            to_index = batch_size
+
+    return from_index, to_index
