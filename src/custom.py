@@ -26,18 +26,6 @@ network_logs_dir = os.path.join(network_dir, 'logs')
 network_checkpoint_path = os.path.join(network_dir, 'checkpoint.tflearn')
 network_model_path = os.path.join(network_dir, 'model.tflearn')
 
-controls_map = {
-    'forward': [1, 0, 0, 0, 0, 0, 0, 0, 0],
-    'backward': [0, 1, 0, 0, 0, 0, 0, 0, 0],
-    'left': [0, 0, 1, 0, 0, 0, 0, 0, 0],
-    'right': [0, 0, 0, 1, 0, 0, 0, 0, 0],
-    'forward+left': [0, 0, 0, 0, 1, 0, 0, 0, 0],
-    'forward+right': [0, 0, 0, 0, 0, 1, 0, 0, 0],
-    'backward+left': [0, 0, 0, 0, 0, 0, 1, 0, 0],
-    'backward+right': [0, 0, 0, 0, 0, 0, 0, 1, 0],
-    'none': [0, 0, 0, 0, 0, 0, 0, 0, 1],
-}
-
 # Methods
 
 
@@ -99,8 +87,23 @@ def get_controls_from_inputs(inputs):
         'right': right,
     }
 
+def get_controls_map():
+    return {
+        'forward': [1, 0, 0, 0, 0, 0, 0, 0, 0],
+        'backward': [0, 1, 0, 0, 0, 0, 0, 0, 0],
+        'left': [0, 0, 1, 0, 0, 0, 0, 0, 0],
+        'right': [0, 0, 0, 1, 0, 0, 0, 0, 0],
+        'forward+left': [0, 0, 0, 0, 1, 0, 0, 0, 0],
+        'forward+right': [0, 0, 0, 0, 0, 1, 0, 0, 0],
+        'backward+left': [0, 0, 0, 0, 0, 0, 1, 0, 0],
+        'backward+right': [0, 0, 0, 0, 0, 0, 0, 1, 0],
+        'none': [0, 0, 0, 0, 0, 0, 0, 0, 1],
+    }
+
 
 def convert_controls_to_array(controls):
+    controls_map = get_controls_map()
+
     output = controls_map['none']
 
     left = 'left' in controls and controls['left']

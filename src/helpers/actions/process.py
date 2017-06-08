@@ -14,6 +14,7 @@ args = get_args()
 
 activity = args['activity']
 mode = args['mode']
+processed_images = []
 activity_raw_dir = os.path.join(data_dir, activity, 'raw')
 processed_dir = os.path.join(data_dir, activity, 'processed', mode)
 processed_images_file_path = os.path.join(
@@ -80,6 +81,8 @@ def do_image_processing(image_data):
 
 
 def do_session_directory_processing(session_directory, session_directory_images):
+    global processed_images
+
     print('Processing images from directory {0} ...'.format(session_directory))
     sys.stdout.flush()
 
@@ -97,6 +100,8 @@ def do_session_directory_processing(session_directory, session_directory_images)
 
 # Main
 def process():
+    global processed_images
+
     # Prepare folders and files
     if not os.path.exists(processed_dir):
         os.makedirs(processed_dir)

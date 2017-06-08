@@ -122,7 +122,7 @@ def save_model(model):
     model.save(network_model_path)
 
 
-def get_prediction(model, X):
+def get_prediction(model, X, controls_map):
     action = None
 
     prediction = model.predict([X])
@@ -131,7 +131,7 @@ def get_prediction(model, X):
     max_index = np.argmax(prediction)
 
     # View controls_map dict to see, which output corresponds to which action
-    for control, output in controls_map:
+    for control, output in controls_map.items():
         control_max_index = np.argmax(output)
         if max_index == control_max_index:
             action = control
