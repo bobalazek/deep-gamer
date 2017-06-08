@@ -24,17 +24,6 @@ processed_data_file_path = os.path.join(processed_dir, 'data.txt')
 # Functions
 
 
-def prepare_folders_and_files():
-    if not os.path.exists(processed_dir):
-        os.makedirs(processed_dir)
-
-    if not os.path.exists(processed_images_file_path):
-        processed_images_file = open(processed_images_file_path, 'w+').read()
-
-    if not os.path.exists(processed_data_file_path):
-        processed_images_file = open(processed_data_file_path, 'w+').read()
-
-
 def get_processed_images():
     processed_images_file = open(processed_images_file_path, 'r+').read()
     processed_images = processed_images_file.split("\n")
@@ -107,11 +96,16 @@ def do_session_directory_processing(session_directory, session_directory_images)
 
 
 # Main
-if __name__ == "__main__":
-    last_time = time.time()
-
+def process():
     # Prepare folders and files
-    prepare_folders_and_files()
+    if not os.path.exists(processed_dir):
+        os.makedirs(processed_dir)
+
+    if not os.path.exists(processed_images_file_path):
+        processed_images_file = open(processed_images_file_path, 'w+').read()
+
+    if not os.path.exists(processed_data_file_path):
+        processed_images_file = open(processed_data_file_path, 'w+').read()
 
     # General information
     print('Start at {0}'.format(now))

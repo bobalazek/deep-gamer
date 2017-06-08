@@ -6,8 +6,8 @@ from helpers.common import *
 from helpers.custom import *
 from helpers.image import *
 
-# Main
-if __name__ == "__main__":
+
+def evaluate():
     print('Loading model ...')
     sys.stdout.flush()
 

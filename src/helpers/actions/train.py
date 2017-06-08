@@ -8,8 +8,7 @@ from helpers.custom import *
 now = datetime.datetime.now()
 args = get_args()
 
-# Main
-if __name__ == "__main__":
+def train():
     print('Loading model ...')
     sys.stdout.flush()
 

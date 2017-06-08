@@ -9,6 +9,11 @@ def prepare_args():
     parser = argparse.ArgumentParser(description='Deep Gamer')
 
     parser.add_argument(
+        'action',
+        help='Which action should be triggered (available: capture, evaluate, process & train)?',
+        choices=['capture', 'process', 'train', 'evaluate']
+    )
+    parser.add_argument(
         '-a',
         '--activity',
         help='Which activity will you be doing (ex.: driving, walking, running, ...)?',
@@ -34,6 +39,7 @@ def get_args():
     args = prepare_args()
 
     return {
+        'action': args.action,
         'activity': args.activity,
         'mode': args.mode,
         'force_new_model': args.force_new_model,
@@ -109,3 +115,29 @@ def get_from_and_to_index(iteration, batch_size, total_size):
             to_index = batch_size
 
     return from_index, to_index
+
+
+def save_model(model):
+    # TODO: make backups/archives?
+    model.save(network_model_path)
+
+
+def get_prediction(model, X):
+    action = None
+
+    prediction = model.predict([X])
+    prediction = prediction[0]
+
+    max_index = np.argmax(prediction)
+
+    # View controls_map dict to see, which output corresponds to which action
+    for control, output in controls_map:
+        control_max_index = np.argmax(output)
+        if max_index == control_max_index:
+            action = control
+
+    return {
+        'action': action,
+        'action_confidence': prediction[max_index],
+        'raw': prediction,
+    }

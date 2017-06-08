@@ -186,31 +186,5 @@ def get_model(load_existing=True, force_new_model=False):
     return model
 
 
-def save_model(model):
-    # TODO: make backups/archives?
-    model.save(network_model_path)
-
-
-def get_prediction(model, X):
-    action = None
-
-    prediction = model.predict([X])
-    prediction = prediction[0]
-
-    max_index = np.argmax(prediction)
-
-    # View controls_map dict to see, which output corresponds to which action
-    for control, output in controls_map:
-        control_max_index = np.argmax(output)
-        if max_index == control_max_index:
-            action = control
-
-    return {
-        'action': action,
-        'action_confidence': prediction[max_index],
-        'raw': prediction,
-    }
-
-
 def get_model_run_id():
     return now.strftime('%Y%m%d_%H%M%S') + '_' + '{0}_{1}'.format(activity, mode)

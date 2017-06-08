@@ -23,11 +23,6 @@ session_dir = os.path.join(data_dir, args['activity'], 'raw', session_id)
 # Functions
 
 
-def prepare_folders_and_files():
-    if not os.path.exists(session_dir):
-        os.makedirs(session_dir)
-
-
 def capture_image(timestamp):
     filename = timestamp.replace(':', '') + '.jpg'
     filepath = os.path.join(session_dir, filename)
@@ -46,7 +41,7 @@ def capture_inputs():
     }
 
 
-def capture():
+def do_capture():
     global inputs, is_capturing
 
     now = datetime.datetime.now()
@@ -72,12 +67,14 @@ def capture():
     return is_capturing
 
 
-# Main
-if __name__ == "__main__":
+def capture():
+    global inputs
+
     last_time = time.time()
 
     # Prepare folders and files
-    prepare_folders_and_files()
+    if not os.path.exists(session_dir):
+        os.makedirs(session_dir)
 
     print('Start at {0}'.format(now))
     print('=' * 32)
@@ -86,7 +83,7 @@ if __name__ == "__main__":
     while True:
         inputs = capture_inputs()
 
-        if capture():
+        if do_capture():
             print('Last execution took {0} seconds.'.format(
                 time.time() - last_time))
             print('Controls: {0}'.format(get_controls_from_inputs(inputs)))
