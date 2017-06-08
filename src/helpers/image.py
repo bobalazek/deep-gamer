@@ -1,6 +1,6 @@
 import numpy as np
 from PIL import Image
-from helpers.custom import *
+from custom import *
 
 
 def process_image(image, return_array=False):

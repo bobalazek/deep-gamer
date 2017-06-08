@@ -3,8 +3,8 @@ import os
 import time
 import datetime
 import json
+from custom import *
 from helpers.common import *
-from helpers.custom import *
 from helpers.capture.keyboard import get_pressed_keyboard_keys, check_for_capturing_hotkeys
 from helpers.capture.gamepad import get_pressed_gamepad_buttons_and_axes
 from helpers.capture.mouse import get_mouse_position_and_buttons
