@@ -100,16 +100,14 @@ class AbstractNetwork:
             '{0}_{1}'.format(self.activity, self.mode)
 
     def trigger_action(self, action):
-        if self.model is None:
-            sys.exit('Exiting. You need to run prepare_model() first')
+        raise NotImplementedError('You need to implement this method.')
 
     # Helpers
     def get_device(self, action='train'):
         return self.device
 
     def process_image(self, image, return_array=False):
-        if self.model is None:
-            sys.exit('Exiting. You need to run prepare_model() first')
+        raise NotImplementedError('You need to implement this method.')
 
     def get_image_processing_data_row(self, processed_image_path, inputs):
         return {
@@ -118,16 +116,13 @@ class AbstractNetwork:
         }
 
     def get_controls_from_inputs(self, inputs):
-        if self.model is None:
-            sys.exit('Exiting. You need to run prepare_model() first')
+        raise NotImplementedError('You need to implement this method.')
 
     def get_controls_map(self):
-        if self.model is None:
-            sys.exit('Exiting. You need to run prepare_model() first')
+        raise NotImplementedError('You need to implement this method.')
 
     def convert_controls_to_array(self, controls):
-        if self.model is None:
-            sys.exit('Exiting. You need to run prepare_model() first')
+        raise NotImplementedError('You need to implement this method.')
 
     # Main methods
     def capture(self):
