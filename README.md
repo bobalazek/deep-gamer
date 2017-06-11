@@ -23,7 +23,7 @@ After that we need to preprocess all the gathered data. For that, just run `pyth
 
 ### Train
 Now that we have all our data prepared, we will need to train the model. We do that with `python src/deep_gamer.py train` (you can add the `--force-new-model`, if you don't want to continue to train your existing model). This may take a couple of hours/days.
-To view the training, start a separate terminal and run `python -m tensorflow.tensorboard --logdir=data/{ACTIVITY}/network/{MODE}/logs` (ex. `python -m tensorflow.tensorboard --logdir=data/general/network/default/logs`). Now you can go to http://localhost:6006.
+To view the training, start a separate terminal and run `python -m tensorflow.tensorboard --logdir=data/{GAME}/{ACTIVITY}/network/{MODE}/logs` (ex. `python -m tensorflow.tensorboard --logdir=data/game/general/network/default/logs`). Now you can go to http://localhost:6006.
 
 ### Evaluate
 Now we are finally ready to evaluate the model. We can do that with `python src/deep_gamer.py evaluate`.
