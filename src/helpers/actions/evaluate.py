@@ -59,6 +59,8 @@ class EvaluateAction:
                 with tf.device(self.network.get_device(action='evaluate')):
                     prediction = self.network.get_model_prediction(
                         X, controls_map)
+                    self.network.trigger_action(prediction['action'])
+
                     print('Prediction: {0}.'.format(prediction))
                     sys.stdout.flush()
 

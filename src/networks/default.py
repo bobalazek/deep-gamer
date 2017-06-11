@@ -7,6 +7,7 @@ import numpy as np
 import cv2
 from PIL import Image
 from helpers.common import *
+from helpers.input import press_keyboard_key, release_keyboard_key
 from helpers.actions.capture import CaptureAction
 from helpers.actions.process import ProcessAction
 from helpers.actions.train import TrainAction
@@ -132,13 +133,39 @@ class DefaultNetwork:
         return {
             'action': action,
             'action_confidence': prediction[max_index],
-            'raw': prediction,
         }
 
     def get_model_run_id(self):
         now = datetime.datetime.now()
         return now.strftime('%Y%m%d_%H%M%S') + '_' + \
             '{0}_{1}'.format(self.activity, self.mode)
+
+    def trigger_action(self, action):
+        if action == 'forward' or action == 'forward+left' or action == 'forward+right':
+            press_keyboard_key('w')
+        else:
+            release_keyboard_key('w')
+
+        if action == 'backward' or action == 'backward+left' or action == 'backward+right':
+            press_keyboard_key('s')
+        else:
+            release_keyboard_key('s')
+
+        if action == 'left' or action == 'forward+left' or action == 'backward+left':
+            press_keyboard_key('a')
+        else:
+            release_keyboard_key('a')
+
+        if action == 'right' or action == 'forward+right' or action == 'backward+right':
+            press_keyboard_key('a')
+        else:
+            release_keyboard_key('a')
+
+        if action == 'none':
+            release_keyboard_key('w')
+            release_keyboard_key('s')
+            release_keyboard_key('a')
+            release_keyboard_key('d')
 
     # Helpers
     def get_device(self, action='train'):

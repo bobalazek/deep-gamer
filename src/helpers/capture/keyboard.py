@@ -149,7 +149,7 @@ VK_CODES = {
     '\\': 0xDC,
     ']': 0xDD,
     "'": 0xDE,
-    '`': 0xC0
+    '`': 0xC0,
 }
 last_pressed_hotkeys = time.time() - 1
 
