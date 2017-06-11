@@ -7,7 +7,7 @@ import datetime
 from helpers.common import *
 
 
-class ProcessAction:
+class PreprocessAction:
 
     network = None
 
@@ -104,7 +104,7 @@ class ProcessAction:
         sys.stdout.flush()
 
     # Main
-    def process(self):
+    def preprocess(self):
         now = datetime.datetime.now()
 
         # Prepare folders and files

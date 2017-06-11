@@ -3,7 +3,7 @@ import datetime
 import numpy as np
 from helpers.common import *
 from helpers.actions.capture import CaptureAction
-from helpers.actions.process import ProcessAction
+from helpers.actions.preprocess import PreprocessAction
 from helpers.actions.train import TrainAction
 from helpers.actions.evaluate import EvaluateAction
 
@@ -122,9 +122,9 @@ class AbstractNetwork:
         captureAction = CaptureAction(self)
         captureAction.capture()
 
-    def process(self):
-        processAction = ProcessAction(self)
-        processAction.process()
+    def preprocess(self):
+        processAction = PreprocessAction(self)
+        processAction.preprocess()
 
     def train(self):
         trainAction = TrainAction(self)

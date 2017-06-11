@@ -11,7 +11,7 @@ if __name__ == "__main__":
         network.capture()
     elif args['action'] == 'train':
         network.train()
-    elif args['action'] == 'process':
-        network.process()
+    elif args['action'] == 'preprocess':
+        network.preprocess()
     elif args['action'] == 'evaluate':
         network.evaluate()

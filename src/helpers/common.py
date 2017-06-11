@@ -13,8 +13,8 @@ def prepare_args():
 
     parser.add_argument(
         'action',
-        help='Which action should be triggered (available: capture, evaluate, process & train)?',
-        choices=['capture', 'process', 'train', 'evaluate']
+        help='Which action should be triggered (available: capture, evaluate, preprocess & train)?',
+        choices=['capture', 'preprocess', 'train', 'evaluate']
     )
     parser.add_argument(
         '-g',
@@ -31,7 +31,7 @@ def prepare_args():
     parser.add_argument(
         '-m',
         '--mode',
-        help='Which mode should we use when processing/evaluating the raw data? Usefull when processing/evaluating/testing multiple results with the same raw data.',
+        help='Which mode should we use when preprocessing/evaluating the raw data? Usefull when preprocessing/evaluating/testing multiple results with the same raw data.',
         default='default'
     )
     parser.add_argument(
