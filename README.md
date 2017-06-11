@@ -29,7 +29,7 @@ To view the training, start a separate terminal and run `python -m tensorflow.te
 Now we are finally ready to evaluate the model. We can do that with `python src/deep_gamer.py evaluate`.
 
 ## CS Fixes
-We use autopep8[https://github.com/hhatto/autopep8] for coding standard fixes. After installing it, just run `autopep8 -a -r src`.
+We use [autopep8](https://github.com/hhatto/autopep8) for coding standard fixes. After installing it, just run `autopep8 -a -r src`.
 
 ## Author
 Borut Balazek <bobalazek124@gmail.com> (http://bobalazek.com)
