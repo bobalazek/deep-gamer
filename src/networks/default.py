@@ -20,17 +20,20 @@ class DefaultNetwork:
 
     model = None
     device = '/cpu:0'
-    size = (640, 480)
+    size = (640, 480)  # (width, height)
     train_iterations = 128
     train_batch_size = 256
     train_epochs = 1
-    validation_set_percentage = 0.1
-    # View the full list inside src/capture/keyboard.py
+    train_shuffle_data = False
+    validation_set_percentage = 0.1  # 0.1 = 10%
+    # All hotkeys: src/capture/keyboard.py
     toggle_capture_hotkeys = ['left_control', 'F11']
+    toggle_evaluate_hotkeys = ['left_control', 'F10']
 
     def __init__(self):
         self.activity = self.args['activity']
         self.mode = self.args['mode']
+        self.force_new_model = self.args['force_new_model']
         self.network_dir = os.path.join(
             get_data_dir(), self.activity, 'network', self.mode)
         self.network_logs_dir = os.path.join(self.network_dir, 'logs')
@@ -43,6 +46,102 @@ class DefaultNetwork:
         self.processed_data_file_path = os.path.join(
             self.processed_dir, 'data.txt')
 
+    def get_xy(self, iteration):
+        X = []
+        Y = []
+
+        processed_data_file = open(self.processed_data_file_path, 'r+').read()
+        processed_data = processed_data_file.split("\n")
+        processed_data = list(filter(None, processed_data))
+
+        if self.train_shuffle_data:
+            random.shuffle(processed_data)
+
+        from_index, to_index = get_from_and_to_index(iteration=iteration,
+                                                     batch_size=self.train_batch_size,
+                                                     total_size=len(processed_data))
+        processed_data = processed_data[from_index:to_index]
+
+        for row in processed_data:
+            row_data = json.loads(row)
+
+            X.append(np.array(Image.open(row_data['image_path'])))
+            Y.append(self.convert_controls_to_array(row_data['controls']))
+
+        return X, Y
+
+    # Model related stuff
+    def prepare_model(self, load_existing=True):
+        # Prepare dirs
+        if not os.path.exists(self.network_logs_dir):
+            os.makedirs(self.network_logs_dir)
+
+        # Prepare data
+        input2_size, input1_size = self.size
+        output_size = len(self.convert_controls_to_array({}))
+
+        # Return the model
+        self.model = inception_v3(
+            input1_size,
+            input2_size,
+            output_size,
+            tensorboard_dir=self.network_logs_dir,
+            checkpoint_path=self.network_checkpoint_path,
+            best_checkpoint_path=self.network_checkpoint_path
+        )
+
+        if load_existing and not self.force_new_model:
+            self.model.load(self.network_model_path)
+
+        return self.model
+
+    def get_model(self):
+        if self.model is None:
+            sys.exit('Exiting. You need to run prepare_model() first')
+
+        return self.model
+
+    def save_model(self, model):
+        # TODO: make backups/archives?
+        model = self.get_model()
+        return model.save(self.network_model_path)
+
+    def fit_model(self, X, Y, model_run_id):
+        return model.fit(
+            X, Y,
+            validation_set=self.validation_set_percentage,
+            n_epoch=self.train_epochs,
+            show_metric=True,
+            snapshot_epoch=False,
+            run_id=model_run_id)
+
+    def get_model_prediction(self, X, controls_map):
+        action = None
+
+        prediction = self.model.predict([X])
+        prediction = prediction[0]
+
+        max_index = np.argmax(prediction)
+
+        # View controls_map dict to see, which output corresponds to which
+        # action
+        for control, output in controls_map.items():
+            control_max_index = np.argmax(output)
+            if max_index == control_max_index:
+                action = control
+
+        return {
+            'action': action,
+            'action_confidence': prediction[max_index],
+            'raw': prediction,
+        }
+
+    def get_model_run_id(self):
+        now = datetime.datetime.now()
+        return now.strftime('%Y%m%d_%H%M%S') + '_' + \
+            '{0}_{1}'.format(self.activity, self.mode)
+
+    # Helpers
     def get_device(self, action='train'):
         return self.device
 
@@ -131,59 +230,7 @@ class DefaultNetwork:
 
         return output
 
-    def get_xy(self, iteration, shuffle=False):
-        X = []
-        Y = []
-
-        processed_data_file = open(self.processed_data_file_path, 'r+').read()
-        processed_data = processed_data_file.split("\n")
-        processed_data = list(filter(None, processed_data))
-
-        if shuffle:
-            random.shuffle(processed_data)
-
-        from_index, to_index = get_from_and_to_index(iteration=iteration,
-                                                     batch_size=self.train_batch_size,
-                                                     total_size=len(processed_data))
-        processed_data = processed_data[from_index:to_index]
-
-        for row in processed_data:
-            row_data = json.loads(row)
-
-            X.append(np.array(Image.open(row_data['image_path'])))
-            Y.append(self.convert_controls_to_array(row_data['controls']))
-
-        return X, Y
-
-    def get_model(self, load_existing=True, force_new_model=False):
-        # Prepare dirs
-        if not os.path.exists(self.network_logs_dir):
-            os.makedirs(self.network_logs_dir)
-
-        # Prepare data
-        input2_size, input1_size = self.size
-        output_size = len(self.convert_controls_to_array({}))
-
-        # Return the model
-        self.model = inception_v3(
-            input1_size,
-            input2_size,
-            output_size,
-            tensorboard_dir=self.network_logs_dir,
-            checkpoint_path=self.network_checkpoint_path,
-            best_checkpoint_path=self.network_checkpoint_path
-        )
-
-        if load_existing and not force_new_model:
-            self.model.load(self.network_model_path)
-
-        return self.model
-
-    def get_model_run_id(self):
-        now = datetime.datetime.now()
-        return now.strftime('%Y%m%d_%H%M%S') + '_' + \
-            '{0}_{1}'.format(self.activity, self.mode)
-
+    # Main methods
     def capture(self):
         captureAction = CaptureAction(self)
         captureAction.capture()

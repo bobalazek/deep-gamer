@@ -3,6 +3,9 @@ import cv2
 import argparse
 import numpy as np
 from PIL import Image, ImageGrab
+from helpers.capture.keyboard import get_pressed_keyboard_keys, check_for_capturing_hotkeys
+from helpers.capture.gamepad import get_pressed_gamepad_buttons_and_axes
+from helpers.capture.mouse import get_mouse_position_and_buttons
 
 
 def prepare_args():
@@ -99,6 +102,14 @@ def show_preview_window(images_array):
     return True
 
 
+def get_inputs():
+    return {
+        'keyboard': get_pressed_keyboard_keys(),
+        'mouse': get_mouse_position_and_buttons(),
+        'gamepad': get_pressed_gamepad_buttons_and_axes(),
+    }
+
+
 def get_from_and_to_index(iteration, batch_size, total_size):
     from_index = iteration * batch_size
     to_index = from_index + batch_size
@@ -113,29 +124,3 @@ def get_from_and_to_index(iteration, batch_size, total_size):
             to_index = batch_size
 
     return from_index, to_index
-
-
-def save_model(model):
-    # TODO: make backups/archives?
-    model.save(network_model_path)
-
-
-def get_prediction(model, X, controls_map):
-    action = None
-
-    prediction = model.predict([X])
-    prediction = prediction[0]
-
-    max_index = np.argmax(prediction)
-
-    # View controls_map dict to see, which output corresponds to which action
-    for control, output in controls_map.items():
-        control_max_index = np.argmax(output)
-        if max_index == control_max_index:
-            action = control
-
-    return {
-        'action': action,
-        'action_confidence': prediction[max_index],
-        'raw': prediction,
-    }

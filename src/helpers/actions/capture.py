@@ -4,9 +4,6 @@ import time
 import datetime
 import json
 from helpers.common import *
-from helpers.capture.keyboard import get_pressed_keyboard_keys, check_for_capturing_hotkeys
-from helpers.capture.gamepad import get_pressed_gamepad_buttons_and_axes
-from helpers.capture.mouse import get_mouse_position_and_buttons
 
 
 class CaptureAction:
@@ -24,13 +21,6 @@ class CaptureAction:
         session_id = now.strftime('%Y-%m-%d_%H%M%S')
         self.session_dir = os.path.join(
             get_data_dir(), args['activity'], 'raw', session_id)
-
-    def capture_inputs(self):
-        return {
-            'keyboard': get_pressed_keyboard_keys(),
-            'mouse': get_mouse_position_and_buttons(),
-            'gamepad': get_pressed_gamepad_buttons_and_axes(),
-        }
 
     def capture_image(self, timestamp):
         filename = timestamp.replace(':', '') + '.jpg'
@@ -75,10 +65,13 @@ class CaptureAction:
 
         print('Start at {0}'.format(now))
         print('=' * 32)
+        print('To start/stop capturing, press: {0}'.format(
+            ' & '.join(self.network.toggle_capture_hotkeys)))
+        print('=' * 32)
         sys.stdout.flush()
 
         while True:
-            self.inputs = self.capture_inputs()
+            self.inputs = get_inputs()
 
             if self.do_capture():
                 print('Last execution took {0} seconds.'.format(

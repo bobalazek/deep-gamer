@@ -18,18 +18,26 @@ class TrainAction:
     def train(self):
         now = datetime.datetime.now()
 
-        print('Loading model ...')
-        sys.stdout.flush()
-
-        with tf.device(self.network.get_device(action='train')):
-            model = self.network.get_model(
-                force_new_model=self.args['force_new_model'])
-
-        model_run_id = self.network.get_model_run_id()
-
         print('Start at {0}'.format(now))
         print('=' * 32)
         sys.stdout.flush()
+
+        with tf.device(self.network.get_device(action='train')):
+            loading_model_start = time.time()
+
+            print('Loading model ...')
+            sys.stdout.flush()
+
+            self.network.prepare_model()
+
+            print(
+                'Model loaded. It took {0} seconds to load.'.format(
+                    time.time() -
+                    loading_model_start))
+            print('=' * 32)
+            sys.stdout.flush()
+
+        model_run_id = self.network.get_model_run_id()
 
         for iteration in range(self.network.train_iterations):
             print('Starting iteration #{0}'.format(iteration))
@@ -38,18 +46,12 @@ class TrainAction:
             X, Y = self.network.get_xy(iteration=iteration)
 
             with tf.device(self.network.get_device(action='train')):
-                model.fit(
-                    X, Y,
-                    validation_set=self.network.validation_set_percentage,
-                    n_epoch=self.network.train_epochs,
-                    show_metric=True,
-                    snapshot_epoch=False,
-                    run_id=model_run_id)
+                self.network.fit_model(X, Y, model_run_id)
 
             print('Saving model ...')
             sys.stdout.flush()
 
-            save_model(model)
+            self.network.save_model()
 
             print('Model saved.')
             print('=' * 32)
