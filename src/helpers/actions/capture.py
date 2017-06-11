@@ -20,7 +20,7 @@ class CaptureAction:
 
         session_id = now.strftime('%Y-%m-%d_%H%M%S')
         self.session_dir = os.path.join(
-            get_data_dir(), args['activity'], 'raw', session_id)
+            get_data_dir(), args['game'], args['activity'], 'raw', session_id)
 
     def capture_image(self, timestamp):
         filename = timestamp.replace(':', '') + '.jpg'

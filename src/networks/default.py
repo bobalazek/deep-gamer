@@ -8,44 +8,11 @@ import cv2
 from PIL import Image
 from helpers.common import *
 from helpers.input import press_keyboard_key, release_keyboard_key
-from helpers.actions.capture import CaptureAction
-from helpers.actions.process import ProcessAction
-from helpers.actions.train import TrainAction
-from helpers.actions.evaluate import EvaluateAction
 from helpers.models.inception_v3 import inception_v3
+from networks.abstract import AbstractNetwork
 
 
-class DefaultNetwork:
-
-    args = get_args()
-
-    model = None
-    device = '/cpu:0'
-    size = (640, 480)  # (width, height)
-    train_iterations = 128
-    train_batch_size = 256
-    train_epochs = 1
-    train_shuffle_data = False
-    validation_set_percentage = 0.1  # 0.1 = 10%
-    # All hotkeys: src/capture/keyboard.py
-    toggle_capture_hotkeys = ['left_control', 'F11']
-    toggle_evaluate_hotkeys = ['left_control', 'F10']
-
-    def __init__(self):
-        self.activity = self.args['activity']
-        self.mode = self.args['mode']
-        self.force_new_model = self.args['force_new_model']
-        self.network_dir = os.path.join(
-            get_data_dir(), self.activity, 'network', self.mode)
-        self.network_logs_dir = os.path.join(self.network_dir, 'logs')
-        self.network_checkpoint_path = os.path.join(
-            self.network_dir, 'checkpoint.tflearn')
-        self.network_model_path = os.path.join(
-            self.network_dir, 'model.tflearn')
-        self.processed_dir = os.path.join(
-            get_data_dir(), self.activity, 'processed', self.mode)
-        self.processed_data_file_path = os.path.join(
-            self.processed_dir, 'data.txt')
+class DefaultNetwork(AbstractNetwork):
 
     def get_xy(self, iteration):
         X = []
@@ -73,10 +40,6 @@ class DefaultNetwork:
 
     # Model related stuff
     def prepare_model(self, load_existing=True):
-        # Prepare dirs
-        if not os.path.exists(self.network_logs_dir):
-            os.makedirs(self.network_logs_dir)
-
         # Prepare data
         input2_size, input1_size = self.size
         output_size = len(self.convert_controls_to_array({}))
@@ -91,54 +54,12 @@ class DefaultNetwork:
             best_checkpoint_path=self.network_checkpoint_path
         )
 
-        if load_existing and not self.force_new_model:
+        model_file_exists = os.path.isfile(self.network_model_path + '.index')
+
+        if load_existing and not self.force_new_model and model_file_exists:
             self.model.load(self.network_model_path)
 
         return self.model
-
-    def get_model(self):
-        if self.model is None:
-            sys.exit('Exiting. You need to run prepare_model() first')
-
-        return self.model
-
-    def save_model(self, model):
-        model = self.get_model()
-        return model.save(self.network_model_path)
-
-    def fit_model(self, X, Y, model_run_id):
-        return model.fit(
-            X, Y,
-            validation_set=self.validation_set_percentage,
-            n_epoch=self.train_epochs,
-            show_metric=True,
-            snapshot_epoch=False,
-            run_id=model_run_id)
-
-    def get_model_prediction(self, X, controls_map):
-        action = None
-
-        prediction = self.model.predict([X])
-        prediction = prediction[0]
-
-        max_index = np.argmax(prediction)
-
-        # View controls_map dict to see, which output corresponds to which
-        # action
-        for control, output in controls_map.items():
-            control_max_index = np.argmax(output)
-            if max_index == control_max_index:
-                action = control
-
-        return {
-            'action': action,
-            'action_confidence': prediction[max_index],
-        }
-
-    def get_model_run_id(self):
-        now = datetime.datetime.now()
-        return now.strftime('%Y%m%d_%H%M%S') + '_' + \
-            '{0}_{1}'.format(self.activity, self.mode)
 
     def trigger_action(self, action):
         if action == 'forward' or action == 'forward+left' or action == 'forward+right':
@@ -168,34 +89,20 @@ class DefaultNetwork:
             release_keyboard_key('d')
 
     # Helpers
-    def get_device(self, action='train'):
-        return self.device
-
-    def preprocess_image(self, image):
-        image = image.resize(self.size, Image.ANTIALIAS)
-
-        image_array = np.array(image)
-
-        image_array = cv2.cvtColor(image_array, cv2.COLOR_BGR2RGB)
-
-        return image_array  # MUST return a np.array()
-
     def process_image(self, image, return_array=False):
         if isinstance(image, str):
             image = Image.open(image)
 
-        processed_image_array = self.preprocess_image(image)
+        # Do processing
+        processed_image = image.resize(self.size, Image.ANTIALIAS)
+        processed_image_array = np.array(processed_image)
+        processed_image_array = cv2.cvtColor(
+            processed_image_array, cv2.COLOR_BGR2RGB)
 
         if return_array:
             return processed_image_array
 
         return Image.fromarray(processed_image_array)
-
-    def get_image_processing_data_row(self, processed_image_path, inputs):
-        return {
-            'image_path': processed_image_path,
-            'controls': self.get_controls_from_inputs(inputs),
-        }
 
     def get_controls_from_inputs(self, inputs):
         forward = inputs['keyboard']['w'] or inputs['gamepad']['axes']['right_trigger'] > 0
@@ -255,20 +162,3 @@ class DefaultNetwork:
             output = controls_map['right']
 
         return output
-
-    # Main methods
-    def capture(self):
-        captureAction = CaptureAction(self)
-        captureAction.capture()
-
-    def process(self):
-        processAction = ProcessAction(self)
-        processAction.process()
-
-    def train(self):
-        trainAction = TrainAction(self)
-        trainAction.train()
-
-    def evaluate(self):
-        evaluateAction = EvaluateAction(self)
-        evaluateAction.evaluate()

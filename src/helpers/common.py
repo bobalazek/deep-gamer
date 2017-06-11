@@ -17,6 +17,12 @@ def prepare_args():
         choices=['capture', 'process', 'train', 'evaluate']
     )
     parser.add_argument(
+        '-g',
+        '--game',
+        help='Which game?',
+        default='game'
+    )
+    parser.add_argument(
         '-a',
         '--activity',
         help='Which activity will you be doing (ex.: driving, walking, running, ...)?',
@@ -42,6 +48,7 @@ def get_args():
     args = prepare_args()
 
     return {
+        'game': args.game,
         'action': args.action,
         'activity': args.activity,
         'mode': args.mode,

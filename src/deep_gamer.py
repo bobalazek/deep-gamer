@@ -1,11 +1,11 @@
 import datetime
 from helpers.common import *
-from networks.gta5 import GTA5Network
+from networks.default import DefaultNetwork
 
 
 if __name__ == "__main__":
     args = get_args()
-    network = GTA5Network()
+    network = DefaultNetwork()
 
     if args['action'] == 'capture':
         network.capture()

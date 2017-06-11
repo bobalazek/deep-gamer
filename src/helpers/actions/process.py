@@ -16,13 +16,15 @@ class ProcessAction:
 
         self.network = network
 
+        self.game = args['game']
         self.activity = args['activity']
         self.mode = args['mode']
+
         self.activity_raw_dir = os.path.join(
-            get_data_dir(), self.activity, 'raw')
+            get_data_dir(), self.game, self.activity, 'raw')
         self.processed_images = []
         self.processed_dir = os.path.join(
-            get_data_dir(), self.activity, 'processed', self.mode)
+            get_data_dir(), self.game, self.activity, 'processed', self.mode)
         self.processed_images_file_path = os.path.join(
             self.processed_dir, 'processed_images.txt')  # Saves all the processed images
         # Saves the final processed data, such as: left, right, forward,
