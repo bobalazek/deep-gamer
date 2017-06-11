@@ -1,19 +1,17 @@
 import datetime
 from helpers.common import *
-from helpers.actions.capture import capture
-from helpers.actions.train import train
-from helpers.actions.process import process
-from helpers.actions.evaluate import evaluate
+from networks.default import DefaultNetwork
 
-now = datetime.datetime.now()
-args = get_args()
 
 if __name__ == "__main__":
+    args = get_args()
+    network = DefaultNetwork()
+
     if args['action'] == 'capture':
-        capture()
+        network.capture()
     elif args['action'] == 'train':
-        train()
+        network.train()
     elif args['action'] == 'process':
-        process()
+        network.process()
     elif args['action'] == 'evaluate':
-        evaluate()
+        network.evaluate()
