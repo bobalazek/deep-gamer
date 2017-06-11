@@ -1,14 +1,14 @@
 # https://github.com/tflearn/tflearn/blob/master/examples/images/googlenet.py
 
 """ GoogLeNet.
-Applying 'GoogLeNet' to Oxford's 17 Category Flower Dataset classification task.
+
 References:
     - Szegedy, Christian, et al.
     Going deeper with convolutions.
-    - 17 Category Flower Dataset. Maria-Elena Nilsback and Andrew Zisserman.
+
 Links:
     - [GoogLeNet Paper](http://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Szegedy_Going_Deeper_With_2015_CVPR_paper.pdf)
-    - [Flower Dataset (17)](http://www.robots.ox.ac.uk/~vgg/data/flowers/17/)
+
 """
 
 from __future__ import division, print_function, absolute_import
@@ -22,8 +22,8 @@ from tflearn.layers.estimator import regression
 
 
 def inception_v3(
-        input1_size, # height
-        input2_size, # width
+        input1_size,  # height
+        input2_size,  # width
         output_size,
         tensorboard_dir='/tmp/tflearn_logs',
         checkpoint_path=None,
