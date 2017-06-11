@@ -9,7 +9,7 @@
 * Install the python requirements: `pip3 install -r requirements.txt`.
 
 ## Development
-Every custom stuff you may want / will need to change is inside the `src/custom.py` file.
+To create your custom network, just extend the `src/networks/default.py` class and set it to that class inside `src/deep_gamer.py` (`network = MyAwesomeNetwork()`).
 
 ## Workflow
 
