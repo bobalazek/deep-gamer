@@ -30,6 +30,9 @@ network_model_path = os.path.join(network_dir, 'model.tflearn')
 
 
 def get_device(action='train'):
+    if action == 'evaluate':
+        return '/gpu:0'
+
     return '/cpu:0'
 
 

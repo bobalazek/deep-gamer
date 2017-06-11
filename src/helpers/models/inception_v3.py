@@ -29,8 +29,7 @@ def inception_v3(
     best_checkpoint_path=None,
     learning_rate=0.001,
     tensorboard_dir='/tmp/tflearn_logs',
-    best_val_accuracy=0.0
-):
+    best_val_accuracy=0.0):
 
     network = input_data(shape=[None, input1_size, input2_size, 3])
 

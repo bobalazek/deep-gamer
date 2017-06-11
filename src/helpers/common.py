@@ -70,9 +70,9 @@ def show_preview_window(images_array):
     final_images_array = []
 
     for image in images_array:
-        mode = None  # https://stackoverflow.com/questions/32192671/pil-image-mode-i-is-grayscale
+        mode = None # https://stackoverflow.com/questions/32192671/pil-image-mode-i-is-grayscale
 
-        # TODO: also add other modes
+        # http://pillow.readthedocs.io/en/3.4.x/handbook/concepts.html#modes
         if image.mode is 'L':
             mode = cv2.COLOR_GRAY2RGB
 
@@ -88,8 +88,6 @@ def show_preview_window(images_array):
 
     preview_image_array = np.hstack(final_images_array)
 
-    # TODO: figure out why some colors are inversed
-
     cv2.namedWindow('Preview', cv2.WINDOW_NORMAL)
     cv2.imshow('Preview', preview_image_array)
 
@@ -103,10 +101,9 @@ def show_preview_window(images_array):
 def get_from_and_to_index(iteration, batch_size, total_size):
     from_index = iteration * batch_size
     to_index = from_index + batch_size
-    modulo = to_index % total_size
 
-    # TODO: figure out the real formula
     if to_index > total_size:
+        modulo = to_index % total_size
         to_index = modulo
         from_index = to_index - batch_size
         

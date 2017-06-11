@@ -1,6 +1,7 @@
 # Deep Gamer
 
 ## Requirements
+* Windows OS
 * Python 3.5+
 * See requirements.txt
 
