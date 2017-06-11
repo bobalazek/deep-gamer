@@ -1,11 +1,11 @@
 import datetime
 from helpers.common import *
-from networks.default import DefaultNetwork
+from networks.wasd import WASDNetwork
 
 
 if __name__ == "__main__":
     args = get_args()
-    network = DefaultNetwork()
+    network = WASDNetwork()
 
     if args['action'] == 'capture':
         network.capture()

@@ -1,4 +1,3 @@
-import sys
 import os
 import datetime
 import json
@@ -12,7 +11,12 @@ from helpers.models.inception_v3 import inception_v3
 from networks.abstract import AbstractNetwork
 
 
-class DefaultNetwork(AbstractNetwork):
+'''
+The typical network for driving games - WASD (forward, left, backward, right).
+'''
+
+
+class WASDNetwork(AbstractNetwork):
 
     def get_xy(self, iteration):
         X = []

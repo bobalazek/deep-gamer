@@ -1,18 +1,11 @@
-import sys
 import os
 import datetime
-import json
-import random
 import numpy as np
-import cv2
-from PIL import Image
 from helpers.common import *
-from helpers.input import press_keyboard_key, release_keyboard_key
 from helpers.actions.capture import CaptureAction
 from helpers.actions.process import ProcessAction
 from helpers.actions.train import TrainAction
 from helpers.actions.evaluate import EvaluateAction
-from helpers.models.inception_v3 import inception_v3
 
 
 class AbstractNetwork:
