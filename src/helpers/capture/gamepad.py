@@ -80,7 +80,7 @@ def get_pressed_gamepad_buttons_and_axes():
             elif code == 'ABS_HAT0Y':
                 gamepad['axes']['d_pad']['y'] = state
 
-    except:
+    except BaseException:
         pass
 
     return gamepad

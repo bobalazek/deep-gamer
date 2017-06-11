@@ -6,6 +6,7 @@ import time
 import datetime
 from helpers.common import *
 
+
 class ProcessAction:
 
     network = None
@@ -17,22 +18,26 @@ class ProcessAction:
 
         self.activity = args['activity']
         self.mode = args['mode']
-        self.activity_raw_dir = os.path.join(get_data_dir(), self.activity, 'raw')
+        self.activity_raw_dir = os.path.join(
+            get_data_dir(), self.activity, 'raw')
         self.processed_images = []
-        self.processed_dir = os.path.join(get_data_dir(), self.activity, 'processed', self.mode)
+        self.processed_dir = os.path.join(
+            get_data_dir(), self.activity, 'processed', self.mode)
         self.processed_images_file_path = os.path.join(
             self.processed_dir, 'processed_images.txt')  # Saves all the processed images
-        # Saves the final processed data, such as: left, right, forward, backward, ... means, ONLY the core data (as opposed to all the raw data we get while capturing)
-        self.processed_data_file_path = os.path.join(self.processed_dir, 'data.txt')
-
+        # Saves the final processed data, such as: left, right, forward,
+        # backward, ... means, ONLY the core data (as opposed to all the raw
+        # data we get while capturing)
+        self.processed_data_file_path = os.path.join(
+            self.processed_dir, 'data.txt')
 
     def prepare_processed_images(self):
-        processed_images_file = open(self.processed_images_file_path, 'r+').read()
+        processed_images_file = open(
+            self.processed_images_file_path, 'r+').read()
         processed_images = processed_images_file.split("\n")
         self.processed_images = list(filter(None, processed_images))
 
         return self.processed_images
-
 
     def get_activity_raw_session_dirs(self):
         activity_raw_session_dirs = [
@@ -47,7 +52,6 @@ class ProcessAction:
 
         return activity_raw_session_dirs
 
-
     def get_session_directory_images(self, session_directory_log_file_path):
         session_directory_log_file = open(
             session_directory_log_file_path, 'r+').read()
@@ -55,7 +59,6 @@ class ProcessAction:
         session_directory_images = list(filter(None, session_directory_images))
 
         return session_directory_images
-
 
     def do_image_processing(self, image_data):
         image_path = image_data['image']['path']
@@ -80,9 +83,10 @@ class ProcessAction:
                 )
             ) + "\n")
 
-
-    def do_session_directory_processing(self, session_directory, session_directory_images):
-        print('Processing images from directory {0} ...'.format(session_directory))
+    def do_session_directory_processing(
+            self, session_directory, session_directory_images):
+        print('Processing images from directory {0} ...'.format(
+            session_directory))
         sys.stdout.flush()
 
         for image_raw_data in session_directory_images:
@@ -92,10 +96,10 @@ class ProcessAction:
             if image_path not in self.processed_images:
                 self.do_image_processing(image_data)
 
-        print('Images from directory {0} were all successfully processed.'.format(session_directory))
+        print('Images from directory {0} were all successfully processed.'.format(
+            session_directory))
         print('-' * 32)
         sys.stdout.flush()
-
 
     # Main
     def process(self):
@@ -106,10 +110,12 @@ class ProcessAction:
             os.makedirs(self.processed_dir)
 
         if not os.path.exists(self.processed_images_file_path):
-            processed_images_file = open(self.processed_images_file_path, 'w+').read()
+            processed_images_file = open(
+                self.processed_images_file_path, 'w+').read()
 
         if not os.path.exists(self.processed_data_file_path):
-            processed_images_file = open(self.processed_data_file_path, 'w+').read()
+            processed_images_file = open(
+                self.processed_data_file_path, 'w+').read()
 
         # General information
         print('Start at {0}'.format(now))
@@ -122,7 +128,8 @@ class ProcessAction:
 
         # Already processed images
         self.prepare_processed_images()
-        print('Already processed images: {0}'.format(len(self.processed_images)))
+        print('Already processed images: {0}'.format(
+            len(self.processed_images)))
         print('=' * 32)
         sys.stdout.flush()
 
@@ -164,7 +171,8 @@ class ProcessAction:
                 self.do_session_directory_processing(
                     session_directory, session_directory_images)
 
-            print('Directory {0} was successfully processed.'.format(session_directory))
+            print('Directory {0} was successfully processed.'.format(
+                session_directory))
             print('=' * 32)
             sys.stdout.flush()
 

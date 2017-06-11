@@ -8,12 +8,12 @@ from helpers.capture.keyboard import get_pressed_keyboard_keys, check_for_captur
 from helpers.capture.gamepad import get_pressed_gamepad_buttons_and_axes
 from helpers.capture.mouse import get_mouse_position_and_buttons
 
+
 class CaptureAction:
 
     network = None
     is_capturing = False  # If we should be capturing
     inputs = None  # Saves the current input on every tick
-
 
     def __init__(self, network):
         args = get_args()
@@ -22,8 +22,8 @@ class CaptureAction:
         self.network = network
 
         session_id = now.strftime('%Y-%m-%d_%H%M%S')
-        self.session_dir = os.path.join(get_data_dir(), args['activity'], 'raw', session_id)
-
+        self.session_dir = os.path.join(
+            get_data_dir(), args['activity'], 'raw', session_id)
 
     def capture_inputs(self):
         return {
@@ -31,7 +31,6 @@ class CaptureAction:
             'mouse': get_mouse_position_and_buttons(),
             'gamepad': get_pressed_gamepad_buttons_and_axes(),
         }
-
 
     def capture_image(self, timestamp):
         filename = timestamp.replace(':', '') + '.jpg'
@@ -42,12 +41,12 @@ class CaptureAction:
 
         return filename, filepath
 
-
     def do_capture(self):
         now = datetime.datetime.now()
         timestamp = now.isoformat()
 
-        if check_for_capturing_hotkeys(self.inputs['keyboard'], self.network.toggle_capture_hotkeys):
+        if check_for_capturing_hotkeys(
+                self.inputs['keyboard'], self.network.toggle_capture_hotkeys):
             self.is_capturing = not self.is_capturing
 
         if self.is_capturing:
@@ -65,7 +64,6 @@ class CaptureAction:
                 log_file.write(json.dumps(data) + "\n")
 
         return self.is_capturing
-
 
     def capture(self):
         now = datetime.datetime.now()
@@ -85,7 +83,10 @@ class CaptureAction:
             if self.do_capture():
                 print('Last execution took {0} seconds.'.format(
                     time.time() - last_time))
-                print('Controls: {0}'.format(self.network.get_controls_from_inputs(self.inputs)))
+                print(
+                    'Controls: {0}'.format(
+                        self.network.get_controls_from_inputs(
+                            self.inputs)))
                 sys.stdout.flush()
 
             last_time = time.time()

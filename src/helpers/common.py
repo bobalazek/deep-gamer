@@ -70,7 +70,7 @@ def show_preview_window(images_array):
     final_images_array = []
 
     for image in images_array:
-        mode = None # https://stackoverflow.com/questions/32192671/pil-image-mode-i-is-grayscale
+        mode = None  # https://stackoverflow.com/questions/32192671/pil-image-mode-i-is-grayscale
 
         # http://pillow.readthedocs.io/en/3.4.x/handbook/concepts.html#modes
         if image.mode is 'L':
@@ -98,6 +98,7 @@ def show_preview_window(images_array):
 
     return True
 
+
 def get_from_and_to_index(iteration, batch_size, total_size):
     from_index = iteration * batch_size
     to_index = from_index + batch_size
@@ -106,7 +107,7 @@ def get_from_and_to_index(iteration, batch_size, total_size):
         modulo = to_index % total_size
         to_index = modulo
         from_index = to_index - batch_size
-        
+
         if from_index < 0:
             from_index = 0
             to_index = batch_size

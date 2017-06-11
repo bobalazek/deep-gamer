@@ -5,10 +5,11 @@ import time
 import tensorflow as tf
 from helpers.common import *
 
+
 class EvaluateAction:
-    
+
     network = None
-    
+
     def __init__(self, network):
         self.network = network
 

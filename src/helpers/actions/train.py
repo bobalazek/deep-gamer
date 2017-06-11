@@ -3,6 +3,7 @@ import datetime
 import tensorflow as tf
 from helpers.common import *
 
+
 class TrainAction:
 
     network = None
@@ -16,12 +17,13 @@ class TrainAction:
 
     def train(self):
         now = datetime.datetime.now()
-        
+
         print('Loading model ...')
         sys.stdout.flush()
 
         with tf.device(self.network.get_device(action='train')):
-            model = self.network.get_model(force_new_model=self.args['force_new_model'])
+            model = self.network.get_model(
+                force_new_model=self.args['force_new_model'])
 
         model_run_id = self.network.get_model_run_id()
 

@@ -22,14 +22,14 @@ from tflearn.layers.estimator import regression
 
 
 def inception_v3(
-    input1_size,
-    input2_size,
-    output_size,
-    checkpoint_path=None,
-    best_checkpoint_path=None,
-    learning_rate=0.001,
-    tensorboard_dir='/tmp/tflearn_logs',
-    best_val_accuracy=0.0):
+        input1_size,
+        input2_size,
+        output_size,
+        checkpoint_path=None,
+        best_checkpoint_path=None,
+        learning_rate=0.001,
+        tensorboard_dir='/tmp/tflearn_logs',
+        best_val_accuracy=0.0):
 
     network = input_data(shape=[None, input1_size, input2_size, 3])
 

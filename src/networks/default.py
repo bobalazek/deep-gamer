@@ -25,23 +25,26 @@ class DefaultNetwork:
     train_batch_size = 256
     train_epochs = 1
     validation_set_percentage = 0.1
-    toggle_capture_hotkeys = ['left_control', 'F11'] # View the full list inside src/capture/keyboard.py
-
+    # View the full list inside src/capture/keyboard.py
+    toggle_capture_hotkeys = ['left_control', 'F11']
 
     def __init__(self):
         self.activity = self.args['activity']
         self.mode = self.args['mode']
-        self.network_dir = os.path.join(get_data_dir(), self.activity, 'network', self.mode)
+        self.network_dir = os.path.join(
+            get_data_dir(), self.activity, 'network', self.mode)
         self.network_logs_dir = os.path.join(self.network_dir, 'logs')
-        self.network_checkpoint_path = os.path.join(self.network_dir, 'checkpoint.tflearn')
-        self.network_model_path = os.path.join(self.network_dir, 'model.tflearn')
-        self.processed_dir = os.path.join(get_data_dir(), self.activity, 'processed', self.mode)
-        self.processed_data_file_path = os.path.join(self.processed_dir, 'data.txt')
-
+        self.network_checkpoint_path = os.path.join(
+            self.network_dir, 'checkpoint.tflearn')
+        self.network_model_path = os.path.join(
+            self.network_dir, 'model.tflearn')
+        self.processed_dir = os.path.join(
+            get_data_dir(), self.activity, 'processed', self.mode)
+        self.processed_data_file_path = os.path.join(
+            self.processed_dir, 'data.txt')
 
     def get_device(self, action='train'):
         return self.device
-
 
     def preprocess_image(self, image):
         image = image.resize(self.size, Image.ANTIALIAS)
@@ -50,26 +53,24 @@ class DefaultNetwork:
 
         image_array = cv2.cvtColor(image_array, cv2.COLOR_BGR2RGB)
 
-        return image_array # MUST return a np.array()
-    
+        return image_array  # MUST return a np.array()
+
     def process_image(self, image, return_array=False):
-        if type(image) is str:
+        if isinstance(image, str):
             image = Image.open(image)
-    
+
         processed_image_array = self.preprocess_image(image)
-    
+
         if return_array:
             return processed_image_array
-    
-        return Image.fromarray(processed_image_array)
 
+        return Image.fromarray(processed_image_array)
 
     def get_image_processing_data_row(self, processed_image_path, inputs):
         return {
             'image_path': processed_image_path,
             'controls': self.get_controls_from_inputs(inputs),
         }
-
 
     def get_controls_from_inputs(self, inputs):
         forward = inputs['keyboard']['w'] or inputs['gamepad']['axes']['right_trigger'] > 0
@@ -96,7 +97,6 @@ class DefaultNetwork:
             'backward+right': [0, 0, 0, 0, 0, 0, 0, 1, 0],
             'none': [0, 0, 0, 0, 0, 0, 0, 0, 1],
         }
-
 
     def convert_controls_to_array(self, controls):
         controls_map = self.get_controls_map()
@@ -131,7 +131,6 @@ class DefaultNetwork:
 
         return output
 
-
     def get_xy(self, iteration, shuffle=False):
         X = []
         Y = []
@@ -155,7 +154,6 @@ class DefaultNetwork:
             Y.append(self.convert_controls_to_array(row_data['controls']))
 
         return X, Y
-
 
     def get_model(self, load_existing=True, force_new_model=False):
         # Prepare dirs
@@ -181,26 +179,22 @@ class DefaultNetwork:
 
         return self.model
 
-
     def get_model_run_id(self):
         now = datetime.datetime.now()
-        return now.strftime('%Y%m%d_%H%M%S') + '_' + '{0}_{1}'.format(self.activity, self.mode)
-
+        return now.strftime('%Y%m%d_%H%M%S') + '_' + \
+            '{0}_{1}'.format(self.activity, self.mode)
 
     def capture(self):
         captureAction = CaptureAction(self)
         captureAction.capture()
 
-
     def process(self):
         processAction = ProcessAction(self)
         processAction.process()
 
-
     def train(self):
         trainAction = TrainAction(self)
         trainAction.train()
-
 
     def evaluate(self):
         evaluateAction = EvaluateAction(self)
