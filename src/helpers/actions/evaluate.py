@@ -57,7 +57,8 @@ class EvaluateAction:
                     original_image, return_array=True)
 
                 with tf.device(self.network.get_device(action='evaluate')):
-                    prediction = self.network.get_model_prediction(X, controls_map)
+                    prediction = self.network.get_model_prediction(
+                        X, controls_map)
                     print('Prediction: {0}.'.format(prediction))
                     sys.stdout.flush()
 

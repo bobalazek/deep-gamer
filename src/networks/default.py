@@ -102,7 +102,6 @@ class DefaultNetwork:
         return self.model
 
     def save_model(self, model):
-        # TODO: make backups/archives?
         model = self.get_model()
         return model.save(self.network_model_path)
 
