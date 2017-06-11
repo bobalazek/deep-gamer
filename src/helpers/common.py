@@ -19,7 +19,7 @@ def prepare_args():
     parser.add_argument(
         '-g',
         '--game',
-        help='Which game?',
+        help='For which game do you want to capture/train/evaluate?',
         default='game'
     )
     parser.add_argument(

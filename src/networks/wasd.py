@@ -50,9 +50,9 @@ class WASDNetwork(AbstractNetwork):
 
         # Return the model
         self.model = inception_v3(
-            input1_size,
-            input2_size,
-            output_size,
+            input1_size=input1_size,
+            input2_size=input2_size,
+            output_size=output_size,
             tensorboard_dir=self.network_logs_dir,
             checkpoint_path=self.network_checkpoint_path,
             best_checkpoint_path=self.network_checkpoint_path
