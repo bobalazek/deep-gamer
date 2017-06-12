@@ -14,7 +14,7 @@ To create your custom network, just extend the `src/networks/abstract.py` class 
 ## Existing networks
 
 ### WASD Network
-The `WASD Network` is primary meant for driving games. The network already captures, preprocesses, trains and evaluates the controls for driving games. It has `width (640)` x `height (360)` x `3 (RGB)` inputs, and runs on the [Inception V3](http://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Szegedy_Going_Deeper_With_2015_CVPR_paper.pdf) network and has 9 one-hot outputs (forward, backward, left, right, forward+left, forward+right, backward+left, backward+right & none).
+The `WASD Network` is primary meant for driving games. The network already captures, preprocesses, trains and evaluates the controls for driving games. It has `width (640)` x `height (360)` x `RGB channels (3)` inputs, and runs on the [Inception V3](http://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Szegedy_Going_Deeper_With_2015_CVPR_paper.pdf) network and has 9 one-hot outputs (forward, backward, left, right, forward+left, forward+right, backward+left, backward+right & none).
 
 ## Workflow
 
